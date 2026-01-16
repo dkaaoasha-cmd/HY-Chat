@@ -611,10 +611,20 @@ def render_chatbot():
     st.markdown("---")
     st.markdown("##### 🔍 키워드로 빠르게 찾기")
     
-    cols = st.columns(6)
+    st.markdown("""
+    <style>
+    div[data-testid="column"] > div > div > div > button {
+        font-size: 12px !important;
+        padding: 0.3rem 0.5rem !important;
+        white-space: nowrap !important;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+    
+    cols = st.columns(6, gap="small")
     for idx, (category, data) in enumerate(chatbot_categories.items()):
         with cols[idx]:
-            if st.button(category, key=f"cat_{idx}"):
+            if st.button(category, key=f"cat_{idx}", use_container_width=True):
                 st.session_state.selected_category = category
                 st.session_state.selected_subcategory = None
                 st.rerun()
