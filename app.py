@@ -295,7 +295,7 @@ def render_sidebar():
         st.markdown("### 🎓 한양챗 (HY-Chat)")
         st.markdown("---")
         
-        if st.button("🔄 더미 데이터 생성", use_container_width=True, type="primary"):
+        if st.button("🔄 더미 데이터 생성", width="stretch", type="primary"):
             user_profile, academic_notices, scholarships, career_requirements = generate_dummy_data()
             st.session_state.user_profile = user_profile
             st.session_state.academic_notices = academic_notices
@@ -501,7 +501,7 @@ def render_career_roadmap():
                 margin=dict(l=80, r=80, t=40, b=80)
             )
             
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, width="stretch")
         
         with col2:
             st.markdown("#### 📈 역량 격차 분석")
@@ -569,7 +569,7 @@ def render_career_roadmap():
             yaxis=dict(showticklabels=False, showgrid=False, zeroline=False, range=[-0.5, 1])
         )
         
-        st.plotly_chart(fig_timeline, use_container_width=True)
+        st.plotly_chart(fig_timeline, width="stretch")
         
         col1, col2 = st.columns(2)
         
