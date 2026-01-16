@@ -389,17 +389,35 @@ def render_sidebar():
         st.markdown("### 🎓 한양챗 (HY-Chat)")
         st.markdown("---")
         
-        st.markdown("### 📋 사용자 정보")
         profile = st.session_state.user_profile
         
         st.markdown(f"""
-        <div style="background: #f0f4f8; padding: 15px; border-radius: 10px; margin-bottom: 10px;">
-            <p style="margin: 5px 0;"><strong>👤 이름:</strong> {profile['name']}</p>
-            <p style="margin: 5px 0;"><strong>🔢 학번:</strong> {profile['student_id']}</p>
-            <p style="margin: 5px 0;"><strong>📚 전공:</strong> {profile['major']}</p>
-            <p style="margin: 5px 0;"><strong>📅 학년:</strong> {profile['grade']}학년 {profile['semester']}학기</p>
-            <p style="margin: 5px 0;"><strong>📊 학점:</strong> {profile['gpa']}/4.5</p>
-            <p style="margin: 5px 0;"><strong>🎯 관심직무:</strong> {profile['interest_career']}</p>
+        <div style="background: linear-gradient(135deg, #0E4A84 0%, #1a6fc4 100%); border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(14, 74, 132, 0.3); margin-bottom: 15px;">
+            <div style="padding: 15px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.2);">
+                <div style="width: 60px; height: 60px; background: white; border-radius: 50%; margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; font-size: 28px;">👤</div>
+                <h3 style="color: white; margin: 0; font-size: 18px;">{profile['name']}</h3>
+                <p style="color: rgba(255,255,255,0.8); margin: 5px 0 0 0; font-size: 13px;">{profile['major']}</p>
+            </div>
+            <div style="padding: 12px;">
+                <div style="background: white; border-radius: 8px; padding: 10px; margin-bottom: 8px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                        <span style="color: #666; font-size: 12px;">🔢 학번</span>
+                        <span style="color: #0E4A84; font-weight: bold; font-size: 13px;">{profile['student_id']}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                        <span style="color: #666; font-size: 12px;">📅 학년</span>
+                        <span style="color: #0E4A84; font-weight: bold; font-size: 13px;">{profile['grade']}학년 {profile['semester']}학기</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="color: #666; font-size: 12px;">📊 학점</span>
+                        <span style="color: #0E4A84; font-weight: bold; font-size: 13px;">{profile['gpa']}/4.5</span>
+                    </div>
+                </div>
+                <div style="background: rgba(255,255,255,0.15); border-radius: 8px; padding: 10px;">
+                    <p style="color: rgba(255,255,255,0.7); font-size: 11px; margin: 0 0 4px 0;">🎯 관심 직무</p>
+                    <p style="color: white; font-weight: bold; margin: 0; font-size: 13px;">{profile['interest_career']}</p>
+                </div>
+            </div>
         </div>
         """, unsafe_allow_html=True)
 
