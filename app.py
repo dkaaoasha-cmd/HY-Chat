@@ -433,7 +433,7 @@ def render_chatbot():
                 "조기 졸업": "조기 졸업 조건이 뭔가요?"
             }
         },
-        "💰 등록금/장학": {
+        "💰 등록금·장학": {
             "icon": "💰",
             "subcategories": {
                 "등록금 납부": "등록금 납부 방법을 알려주세요",
@@ -441,16 +441,6 @@ def render_chatbot():
                 "장학금 종류": "어떤 장학금이 있나요?",
                 "장학금 신청": "장학금 신청은 어떻게 하나요?",
                 "국가장학금": "국가장학금 신청 방법이 궁금해요"
-            }
-        },
-        "👨‍🏫 교수님 정보": {
-            "icon": "👨‍🏫",
-            "subcategories": {
-                "노미나 교수님": "노미나 교수님 연구 분야가 뭔가요?",
-                "박용수 교수님": "박용수 교수님 연구실 정보를 알려주세요",
-                "박희진 교수님": "박희진 교수님 연구 분야가 뭔가요?",
-                "차재혁 교수님": "차재혁 교수님 연구실 정보를 알려주세요",
-                "조동현 교수님": "조동현 교수님 연구 분야가 뭔가요?"
             }
         }
     }
@@ -580,31 +570,6 @@ def render_chatbot():
             "answer": "국가장학금은 한국장학재단(kosaf.go.kr)에서 신청합니다. 소득분위에 따라 지원 금액이 달라지며, 1~3구간은 학기당 최대 285만원까지 지원됩니다. 신청 기간은 매 학기 시작 전 약 2개월간입니다.",
             "link": "https://www.kosaf.go.kr",
             "regulation": "국가장학금 운영규정"
-        },
-        "노미나 교수님": {
-            "answer": "**노미나 교수님** (컴퓨터소프트웨어학부)\n\n**연구 분야**: DNA Computing, 바이오인포매틱스, 분자 컴퓨팅\n\n**연락처**: 02-2220-2379\n\n**이메일**: minarho@hanyang.ac.kr\n\n**연구실**: DNA Computing Lab\n\n**연구실 위치**: 정보통신관(ITBT관)",
-            "link": "http://dna.hanyang.ac.kr",
-            "regulation": "컴퓨터소프트웨어학부"
-        },
-        "박용수 교수님": {
-            "answer": "**박용수 교수님** (컴퓨터소프트웨어학부)\n\n**연구 분야**: 정보보안, 시스템 보안, 네트워크 보안, 암호학\n\n**연락처**: 02-2220-2382\n\n**이메일**: yongsu@hanyang.ac.kr\n\n**연구실**: Security Lab\n\n**연구실 위치**: 정보통신관(ITBT관)",
-            "link": "http://securitylab.hanyang.ac.kr",
-            "regulation": "컴퓨터소프트웨어학부"
-        },
-        "박희진 교수님": {
-            "answer": "**박희진 교수님** (컴퓨터소프트웨어학부)\n\n**연구 분야**: 알고리즘, 자료구조, 계산이론, 최적화\n\n**연락처**: 02-2220-1986\n\n**이메일**: hjpark@hanyang.ac.kr\n\n**연구실**: Algorithm Lab\n\n**연구실 위치**: 정보통신관(ITBT관)",
-            "link": "https://algorithm.hanyang.ac.kr",
-            "regulation": "컴퓨터소프트웨어학부"
-        },
-        "차재혁 교수님": {
-            "answer": "**차재혁 교수님** (컴퓨터소프트웨어학부 학부장)\n\n**연구 분야**: 데이터베이스, 빅데이터 처리, 데이터 관리 시스템\n\n**연락처**: 02-2220-1158\n\n**이메일**: chajh@hanyang.ac.kr\n\n**연구실**: Database Lab\n\n**연구실 위치**: 정보통신관(ITBT관)",
-            "link": "http://db.hanyang.ac.kr",
-            "regulation": "컴퓨터소프트웨어학부"
-        },
-        "조동현 교수님": {
-            "answer": "**조동현 교수님** (컴퓨터소프트웨어학부 부교수)\n\n**연구 분야**: 컴퓨터 비전, 영상 처리, 딥러닝, 패턴인식\n\n**연락처**: 02-2220-2657\n\n**이메일**: doncho@hanyang.ac.kr\n\n**연구실**: Computer Vision Lab\n\n**연구실 위치**: 정보통신관(ITBT관)",
-            "link": "https://sites.google.com/view/hyu-cv",
-            "regulation": "컴퓨터소프트웨어학부"
         }
     }
     
@@ -621,7 +586,7 @@ def render_chatbot():
     </style>
     """, unsafe_allow_html=True)
     
-    cols = st.columns(6, gap="small")
+    cols = st.columns(5, gap="small")
     for idx, (category, data) in enumerate(chatbot_categories.items()):
         with cols[idx]:
             if st.button(category, key=f"cat_{idx}", use_container_width=True):
