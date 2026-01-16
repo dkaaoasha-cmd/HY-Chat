@@ -347,38 +347,32 @@ def calculate_scholarship_match(scholarship, user_profile):
     return max(0, min(100, int(score)))
 
 def render_sidebar():
+    if not st.session_state.get("data_generated", False):
+        user_profile, academic_notices, scholarships, career_requirements = generate_dummy_data()
+        st.session_state.user_profile = user_profile
+        st.session_state.academic_notices = academic_notices
+        st.session_state.scholarships = scholarships
+        st.session_state.career_requirements = career_requirements
+        st.session_state.data_generated = True
+    
     with st.sidebar:
         st.markdown("### 🎓 한양챗 (HY-Chat)")
         st.markdown("---")
         
-        if st.button("🔄 더미 데이터 생성", width="stretch", type="primary"):
-            user_profile, academic_notices, scholarships, career_requirements = generate_dummy_data()
-            st.session_state.user_profile = user_profile
-            st.session_state.academic_notices = academic_notices
-            st.session_state.scholarships = scholarships
-            st.session_state.career_requirements = career_requirements
-            st.session_state.data_generated = True
-            st.rerun()
+        st.markdown("### 📋 사용자 정보")
+        profile = st.session_state.user_profile
         
-        st.markdown("---")
-        
-        if st.session_state.get("data_generated", False):
-            st.markdown("### 📋 사용자 정보")
-            profile = st.session_state.user_profile
-            
-            st.markdown(f"""
-            <div style="background: #f0f4f8; padding: 15px; border-radius: 10px; margin-bottom: 10px;">
-                <p style="margin: 5px 0;"><strong>👤 이름:</strong> {profile['name']}</p>
-                <p style="margin: 5px 0;"><strong>🔢 학번:</strong> {profile['student_id']}</p>
-                <p style="margin: 5px 0;"><strong>📚 전공:</strong> {profile['major']}</p>
-                <p style="margin: 5px 0;"><strong>📅 학년:</strong> {profile['grade']}학년 {profile['semester']}학기</p>
-                <p style="margin: 5px 0;"><strong>📊 학점:</strong> {profile['gpa']}/4.5</p>
-                <p style="margin: 5px 0;"><strong>💰 소득분위:</strong> {profile['income_level']}분위</p>
-                <p style="margin: 5px 0;"><strong>🎯 관심직무:</strong> {profile['interest_career']}</p>
-            </div>
-            """, unsafe_allow_html=True)
-        else:
-            st.info("👆 '더미 데이터 생성' 버튼을 클릭하여 시작하세요!")
+        st.markdown(f"""
+        <div style="background: #f0f4f8; padding: 15px; border-radius: 10px; margin-bottom: 10px;">
+            <p style="margin: 5px 0;"><strong>👤 이름:</strong> {profile['name']}</p>
+            <p style="margin: 5px 0;"><strong>🔢 학번:</strong> {profile['student_id']}</p>
+            <p style="margin: 5px 0;"><strong>📚 전공:</strong> {profile['major']}</p>
+            <p style="margin: 5px 0;"><strong>📅 학년:</strong> {profile['grade']}학년 {profile['semester']}학기</p>
+            <p style="margin: 5px 0;"><strong>📊 학점:</strong> {profile['gpa']}/4.5</p>
+            <p style="margin: 5px 0;"><strong>💰 소득분위:</strong> {profile['income_level']}분위</p>
+            <p style="margin: 5px 0;"><strong>🎯 관심직무:</strong> {profile['interest_career']}</p>
+        </div>
+        """, unsafe_allow_html=True)
 
 def render_chatbot():
     st.markdown("### 💬 AI 학사 챗봇")
