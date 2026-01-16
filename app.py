@@ -179,43 +179,91 @@ def generate_dummy_data():
     career_requirements = {
         "소프트웨어 개발자": {
             "skills": {"프로그래밍": 90, "데이터분석": 70, "의사소통": 60, "문제해결": 85, "팀워크": 75, "영어능력": 65},
-            "courses": ["자료구조", "알고리즘", "소프트웨어공학", "데이터베이스", "웹프로그래밍"],
-            "activities": ["오픈소스 기여", "해커톤 참가", "개발 동아리", "인턴십"],
+            "courses": [
+                {"name": "자료구조론", "code": "CSE2010", "credits": 3, "department": "컴퓨터소프트웨어학부", "description": "프로그래밍에 필요한 자료구조(배열, 연결리스트, 스택, 큐, 트리, 그래프 등)의 개념과 구현을 학습합니다."},
+                {"name": "알고리즘", "code": "CSE3080", "credits": 3, "department": "컴퓨터소프트웨어학부", "description": "정렬, 탐색, 그래프 알고리즘, 동적 프로그래밍 등 효율적인 문제 해결 알고리즘을 다룹니다."},
+                {"name": "소프트웨어공학", "code": "CSE4006", "credits": 3, "department": "컴퓨터소프트웨어학부", "description": "소프트웨어 개발 생명주기, 요구사항 분석, 설계 패턴, 테스팅 등 체계적인 개발 방법론을 학습합니다."},
+                {"name": "데이터베이스시스템", "code": "CSE3030", "credits": 3, "department": "컴퓨터소프트웨어학부", "description": "관계형 데이터베이스 설계, SQL, 트랜잭션 처리, 데이터 모델링 등을 다룹니다."},
+                {"name": "웹프로그래밍", "code": "CSE4004", "credits": 3, "department": "컴퓨터소프트웨어학부", "description": "HTML, CSS, JavaScript, 서버사이드 프로그래밍 등 웹 애플리케이션 개발 기술을 학습합니다."},
+            ],
+            "activities": ["오픈소스 기여", "해커톤 참가", "개발 동아리", "산업체 인턴십"],
         },
         "데이터 사이언티스트": {
             "skills": {"프로그래밍": 80, "데이터분석": 95, "의사소통": 65, "문제해결": 85, "팀워크": 70, "영어능력": 75},
-            "courses": ["통계학", "기계학습", "데이터마이닝", "빅데이터분석", "인공지능"],
+            "courses": [
+                {"name": "확률및통계", "code": "MAT3100", "credits": 3, "department": "수학과", "description": "확률론의 기초, 확률분포, 통계적 추론, 가설검정 등 데이터 분석의 수학적 기초를 학습합니다."},
+                {"name": "기계학습", "code": "CSE4007", "credits": 3, "department": "컴퓨터소프트웨어학부", "description": "지도학습, 비지도학습, 신경망, 딥러닝 등 기계학습 알고리즘의 원리와 응용을 다룹니다."},
+                {"name": "데이터마이닝", "code": "CSE4009", "credits": 3, "department": "컴퓨터소프트웨어학부", "description": "대용량 데이터에서 유용한 패턴을 발견하는 기법(군집화, 연관규칙, 분류 등)을 학습합니다."},
+                {"name": "빅데이터분석", "code": "CSE4015", "credits": 3, "department": "컴퓨터소프트웨어학부", "description": "Hadoop, Spark 등 빅데이터 처리 프레임워크와 대규모 데이터 분석 기법을 다룹니다."},
+                {"name": "인공지능", "code": "CSE3050", "credits": 3, "department": "컴퓨터소프트웨어학부", "description": "탐색, 지식표현, 추론, 자연어처리 등 인공지능의 핵심 개념과 기술을 학습합니다."},
+            ],
             "activities": ["캐글 대회", "데이터 분석 프로젝트", "연구실 인턴", "논문 작성"],
         },
         "금융 애널리스트": {
             "skills": {"프로그래밍": 60, "데이터분석": 85, "의사소통": 80, "문제해결": 75, "팀워크": 70, "영어능력": 85},
-            "courses": ["재무관리", "투자론", "금융공학", "경제학원론", "회계원리"],
+            "courses": [
+                {"name": "재무관리", "code": "BUS3001", "credits": 3, "department": "경영학부", "description": "기업의 자금조달, 투자결정, 자본구조, 배당정책 등 재무의사결정의 기초를 학습합니다."},
+                {"name": "투자론", "code": "BUS3010", "credits": 3, "department": "경영학부", "description": "주식, 채권, 파생상품 등 금융자산의 가치평가와 포트폴리오 이론을 다룹니다."},
+                {"name": "금융공학", "code": "BUS4020", "credits": 3, "department": "경영학부", "description": "파생상품 가격결정, 리스크 관리, 수치해석적 방법론 등 금융공학의 핵심 개념을 학습합니다."},
+                {"name": "경제학원론", "code": "ECO1001", "credits": 3, "department": "경제금융학부", "description": "미시경제학과 거시경제학의 기본 원리, 시장경제의 작동원리를 이해합니다."},
+                {"name": "회계원리", "code": "BUS1002", "credits": 3, "department": "경영학부", "description": "재무제표 작성과 분석, 회계순환과정, 기업 회계의 기초를 학습합니다."},
+            ],
             "activities": ["금융 공모전", "투자 동아리", "CFA 준비", "증권사 인턴"],
         },
         "건축가": {
             "skills": {"프로그래밍": 40, "데이터분석": 50, "의사소통": 80, "문제해결": 85, "팀워크": 90, "영어능력": 60},
-            "courses": ["건축설계", "구조역학", "건축환경", "도시계획", "건축CAD"],
-            "activities": ["설계 공모전", "건축 전시회", "인턴십", "해외 건축 탐방"],
+            "courses": [
+                {"name": "건축설계스튜디오", "code": "ARC2001", "credits": 6, "department": "건축학부", "description": "건축 설계의 기본 개념과 방법론을 실습을 통해 학습하며, 창의적 공간 구성 능력을 배양합니다."},
+                {"name": "구조역학", "code": "ARC2010", "credits": 3, "department": "건축학부", "description": "건축물의 하중과 응력 분석, 구조 시스템의 역학적 원리를 이해합니다."},
+                {"name": "건축환경", "code": "ARC3005", "credits": 3, "department": "건축학부", "description": "열환경, 빛환경, 음환경 등 건축물의 물리적 환경 조절 원리를 학습합니다."},
+                {"name": "도시계획론", "code": "ARC3020", "credits": 3, "department": "건축학부", "description": "도시의 형성과 발전, 토지이용계획, 도시설계의 기본 원리를 다룹니다."},
+                {"name": "건축CAD", "code": "ARC1005", "credits": 3, "department": "건축학부", "description": "AutoCAD, Revit 등 건축 설계 소프트웨어를 활용한 도면 작성 및 3D 모델링을 학습합니다."},
+            ],
+            "activities": ["설계 공모전", "건축 전시회", "설계사무소 인턴십", "해외 건축 탐방"],
         },
         "연구원": {
             "skills": {"프로그래밍": 70, "데이터분석": 80, "의사소통": 65, "문제해결": 90, "팀워크": 60, "영어능력": 85},
-            "courses": ["연구방법론", "논문작성법", "전공심화과목", "통계학", "실험설계"],
+            "courses": [
+                {"name": "연구방법론", "code": "GEN4001", "credits": 3, "department": "교양학부", "description": "과학적 연구의 설계, 자료수집 방법, 연구윤리 등 학술 연구의 기초를 학습합니다."},
+                {"name": "논문작성법", "code": "GEN4002", "credits": 2, "department": "교양학부", "description": "학술 논문의 구조, 학술적 글쓰기, 인용 방법 등을 체계적으로 배웁니다."},
+                {"name": "고급통계학", "code": "MAT4010", "credits": 3, "department": "수학과", "description": "회귀분석, 분산분석, 다변량분석 등 고급 통계기법을 학습합니다."},
+                {"name": "실험설계", "code": "IND3010", "credits": 3, "department": "산업공학과", "description": "실험의 계획, 수행, 분석 방법론을 학습하고 실제 실험에 적용합니다."},
+                {"name": "캡스톤디자인", "code": "ENG4001", "credits": 3, "department": "공과대학", "description": "전공 지식을 종합하여 실제 문제를 해결하는 프로젝트 수행 능력을 배양합니다."},
+            ],
             "activities": ["학부연구생", "논문 발표", "학회 참가", "연구 프로젝트"],
         },
         "컨설턴트": {
             "skills": {"프로그래밍": 50, "데이터분석": 75, "의사소통": 95, "문제해결": 90, "팀워크": 85, "영어능력": 80},
-            "courses": ["경영전략", "조직행동론", "마케팅", "재무관리", "프로젝트관리"],
-            "activities": ["케이스 스터디", "컨설팅 공모전", "인턴십", "프레젠테이션 대회"],
+            "courses": [
+                {"name": "경영전략", "code": "BUS4001", "credits": 3, "department": "경영학부", "description": "기업의 경쟁우위 확보를 위한 전략 수립과 실행, 산업분석 방법론을 학습합니다."},
+                {"name": "조직행동론", "code": "BUS2005", "credits": 3, "department": "경영학부", "description": "조직 내 개인과 집단의 행동, 리더십, 조직문화, 동기부여 이론을 다룹니다."},
+                {"name": "마케팅원론", "code": "BUS2001", "credits": 3, "department": "경영학부", "description": "마케팅의 기본 개념, 소비자 행동, 마케팅 믹스 전략을 학습합니다."},
+                {"name": "경영정보시스템", "code": "BUS3015", "credits": 3, "department": "경영학부", "description": "기업의 정보시스템 활용, 디지털 전환, IT 기반 경영혁신을 다룹니다."},
+                {"name": "프로젝트관리", "code": "IND3020", "credits": 3, "department": "산업공학과", "description": "프로젝트 계획, 일정관리, 리스크관리, 팀 관리 등 PM 역량을 배양합니다."},
+            ],
+            "activities": ["케이스 스터디", "컨설팅 공모전", "컨설팅펌 인턴십", "프레젠테이션 대회"],
         },
         "의사": {
             "skills": {"프로그래밍": 30, "데이터분석": 60, "의사소통": 90, "문제해결": 95, "팀워크": 85, "영어능력": 75},
-            "courses": ["해부학", "생리학", "약리학", "병리학", "임상실습"],
-            "activities": ["병원 봉사", "의료 봉사단", "연구 참여", "학술 동아리"],
+            "courses": [
+                {"name": "해부학", "code": "MED1001", "credits": 4, "department": "의학과", "description": "인체의 구조와 형태, 각 기관계의 해부학적 특성을 학습합니다."},
+                {"name": "생리학", "code": "MED1002", "credits": 4, "department": "의학과", "description": "인체 각 기관의 기능과 작동 원리, 항상성 유지 메커니즘을 이해합니다."},
+                {"name": "약리학", "code": "MED2001", "credits": 3, "department": "의학과", "description": "약물의 작용 기전, 약동학, 약력학 및 임상 적용을 학습합니다."},
+                {"name": "병리학", "code": "MED2002", "credits": 4, "department": "의학과", "description": "질병의 원인, 발생기전, 형태학적 변화를 연구하여 진단의 기초를 학습합니다."},
+                {"name": "임상실습", "code": "MED4001", "credits": 6, "department": "의학과", "description": "병원 각 과에서 실제 환자를 대상으로 진료 참관 및 실습을 수행합니다."},
+            ],
+            "activities": ["병원 봉사", "의료 봉사단", "기초의학 연구 참여", "학술 동아리"],
         },
         "마케터": {
             "skills": {"프로그래밍": 45, "데이터분석": 70, "의사소통": 90, "문제해결": 75, "팀워크": 85, "영어능력": 70},
-            "courses": ["마케팅원론", "소비자행동론", "디지털마케팅", "브랜드관리", "광고론"],
-            "activities": ["마케팅 공모전", "브랜드 인턴십", "SNS 운영", "시장조사 프로젝트"],
+            "courses": [
+                {"name": "마케팅원론", "code": "BUS2001", "credits": 3, "department": "경영학부", "description": "마케팅의 기본 개념, STP 전략, 4P 믹스 등 마케팅 관리의 기초를 학습합니다."},
+                {"name": "소비자행동론", "code": "BUS3002", "credits": 3, "department": "경영학부", "description": "소비자 의사결정 과정, 심리적 요인, 구매행동 분석을 다룹니다."},
+                {"name": "디지털마케팅", "code": "BUS4010", "credits": 3, "department": "경영학부", "description": "온라인 광고, SNS 마케팅, SEO, 데이터 기반 마케팅 전략을 학습합니다."},
+                {"name": "브랜드관리", "code": "BUS4015", "credits": 3, "department": "경영학부", "description": "브랜드 자산 구축, 브랜드 전략, 브랜드 확장 및 리뉴얼을 다룹니다."},
+                {"name": "광고론", "code": "BUS3005", "credits": 3, "department": "경영학부", "description": "광고의 기획, 제작, 매체 전략, 효과 측정 등 광고 커뮤니케이션을 학습합니다."},
+            ],
+            "activities": ["마케팅 공모전", "브랜드사 인턴십", "SNS 채널 운영", "시장조사 프로젝트"],
         }
     }
     
@@ -532,9 +580,10 @@ def render_career_roadmap():
         semesters = ["현재", "다음 학기", "1년 후", "2년 후", "졸업 전"]
         
         for i, (course, activity) in enumerate(zip(courses, activities)):
+            course_name = course["name"] if isinstance(course, dict) else course
             timeline_data.append({
                 "time": semesters[i] if i < len(semesters) else f"{i+1}단계",
-                "course": course,
+                "course": course_name,
                 "activity": activity
             })
         
@@ -574,13 +623,20 @@ def render_career_roadmap():
         col1, col2 = st.columns(2)
         
         with col1:
-            st.markdown("##### 📚 추천 과목")
+            st.markdown("##### 📚 추천 과목 (한양대학교 개설 과목)")
             for i, course in enumerate(courses, 1):
-                st.markdown(f"""
-                <div style="background: #f0f4f8; padding: 10px; border-radius: 8px; margin: 5px 0; border-left: 4px solid #0E4A84;">
-                    <strong>{i}. {course}</strong>
-                </div>
-                """, unsafe_allow_html=True)
+                if isinstance(course, dict):
+                    with st.expander(f"{i}. {course['name']} ({course['credits']}학점)"):
+                        st.markdown(f"**과목코드:** {course['code']}")
+                        st.markdown(f"**개설학과:** {course['department']}")
+                        st.markdown(f"**학점:** {course['credits']}학점")
+                        st.markdown(f"**과목설명:** {course['description']}")
+                else:
+                    st.markdown(f"""
+                    <div style="background: #f0f4f8; padding: 10px; border-radius: 8px; margin: 5px 0; border-left: 4px solid #0E4A84;">
+                        <strong>{i}. {course}</strong>
+                    </div>
+                    """, unsafe_allow_html=True)
         
         with col2:
             st.markdown("##### 🎯 추천 대외활동")
@@ -591,8 +647,9 @@ def render_career_roadmap():
                 </div>
                 """, unsafe_allow_html=True)
         
+        total_credits = sum(c["credits"] for c in courses if isinstance(c, dict))
         st.markdown("---")
-        st.info(f"💡 **추천 근거**: {profile['name']}님의 현재 역량과 {selected_career} 직무의 필수 역량을 비교 분석한 결과입니다. 부족한 역량을 중심으로 추천 과목과 대외활동을 제안드립니다.")
+        st.info(f"💡 **추천 근거**: {profile['name']}님의 현재 역량과 {selected_career} 직무의 필수 역량을 비교 분석한 결과입니다. 위 추천 과목은 총 {total_credits}학점이며, 부족한 역량을 중심으로 한양대학교 개설 과목과 대외활동을 제안드립니다.")
 
 def main():
     st.markdown('<h1 class="main-header">🎓 한양챗 (HY-Chat)</h1>', unsafe_allow_html=True)
