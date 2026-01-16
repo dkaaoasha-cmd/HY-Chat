@@ -137,7 +137,7 @@ def generate_dummy_data():
             "type": "성적",
             "amount": "등록금 100%",
             "requirements": {"min_gpa": 4.0, "max_income": 10},
-            "deadline": (datetime.now() + timedelta(days=30)).strftime("%Y-%m-%d"),
+            "deadline": (datetime.now() + timedelta(days=5)).strftime("%Y-%m-%d"),
             "description": "직전 학기 성적 우수자에게 지급되는 장학금입니다.",
             "link": "https://sc.hanyang.ac.kr/home",
             "eligibility": ["직전 학기 평점 4.0 이상", "재학생 (휴학생 제외)", "성적 장학금 중복 수혜 불가", "학기당 15학점 이상 이수자"]
@@ -147,7 +147,7 @@ def generate_dummy_data():
             "type": "소득연계",
             "amount": "등록금 70%",
             "requirements": {"min_gpa": 2.5, "max_income": 4},
-            "deadline": (datetime.now() + timedelta(days=45)).strftime("%Y-%m-%d"),
+            "deadline": (datetime.now() + timedelta(days=12)).strftime("%Y-%m-%d"),
             "description": "저소득층 학생을 위한 교내 장학금입니다.",
             "link": "https://sc.hanyang.ac.kr/home",
             "eligibility": ["소득분위 4분위 이하", "직전 학기 평점 2.5 이상", "재학생 (신입생 제외)", "국가장학금 신청 완료자"]
@@ -157,27 +157,57 @@ def generate_dummy_data():
             "type": "근로",
             "amount": "시간당 11,150원",
             "requirements": {"min_gpa": 2.0, "max_income": 8},
-            "deadline": (datetime.now() + timedelta(days=20)).strftime("%Y-%m-%d"),
+            "deadline": (datetime.now() + timedelta(days=8)).strftime("%Y-%m-%d"),
             "description": "교내외 근로를 통해 지급받는 장학금입니다.",
             "link": "https://www.kosaf.go.kr",
             "eligibility": ["소득분위 8분위 이하", "직전 학기 평점 2.0 이상 (경고 1회 허용)", "대한민국 국적 소지자", "한국장학재단 국가근로장학금 신청자"]
         },
         {
+            "name": "국가장학금 I유형",
+            "type": "소득연계",
+            "amount": "최대 570만원",
+            "requirements": {"min_gpa": 2.0, "max_income": 8},
+            "deadline": (datetime.now() + timedelta(days=3)).strftime("%Y-%m-%d"),
+            "description": "소득분위에 따라 차등 지급되는 국가장학금입니다.",
+            "link": "https://www.kosaf.go.kr",
+            "eligibility": ["대한민국 국적 소지자", "소득분위 8분위 이하", "직전 학기 평점 2.0 이상", "한국장학재단 신청 필수"]
+        },
+        {
             "name": "이공계 국가장학금",
-            "type": "국가",
+            "type": "특별",
             "amount": "등록금 전액 + 생활비",
             "requirements": {"min_gpa": 3.5, "max_income": 6, "major_type": "이공계"},
-            "deadline": (datetime.now() + timedelta(days=60)).strftime("%Y-%m-%d"),
+            "deadline": (datetime.now() + timedelta(days=18)).strftime("%Y-%m-%d"),
             "description": "이공계 전공 우수 학생을 위한 국가 장학금입니다.",
             "link": "https://www.kosaf.go.kr",
             "eligibility": ["이공계 전공자 (자연과학, 공학 계열)", "소득분위 6분위 이하", "직전 학기 평점 3.5 이상", "졸업 후 의무복무 기간 동의자"]
         },
         {
+            "name": "한양 봉사장학금",
+            "type": "특별",
+            "amount": "100만원",
+            "requirements": {"min_gpa": 2.5, "max_income": 10},
+            "deadline": (datetime.now() + timedelta(days=10)).strftime("%Y-%m-%d"),
+            "description": "봉사활동 우수자에게 지급되는 장학금입니다.",
+            "link": "https://sc.hanyang.ac.kr/home",
+            "eligibility": ["봉사활동 80시간 이상", "직전 학기 평점 2.5 이상", "재학생", "봉사활동 확인서 제출"]
+        },
+        {
+            "name": "외부장학금 (삼성꿈장학)",
+            "type": "외부",
+            "amount": "등록금 전액",
+            "requirements": {"min_gpa": 3.5, "max_income": 3},
+            "deadline": (datetime.now() + timedelta(days=20)).strftime("%Y-%m-%d"),
+            "description": "삼성에서 지원하는 저소득층 우수 학생 장학금입니다.",
+            "link": "https://www.samsungfoundation.org",
+            "eligibility": ["소득분위 3분위 이하", "직전 학기 평점 3.5 이상", "4학기 이상 재학생", "리더십 역량 보유자"]
+        },
+        {
             "name": "외국어우수장학금",
-            "type": "특기",
+            "type": "성적",
             "amount": "200만원",
             "requirements": {"min_gpa": 3.0, "max_income": 10},
-            "deadline": (datetime.now() + timedelta(days=35)).strftime("%Y-%m-%d"),
+            "deadline": (datetime.now() + timedelta(days=15)).strftime("%Y-%m-%d"),
             "description": "TOEIC 900점 이상 또는 동등 수준의 외국어 능력 보유자",
             "link": "https://sc.hanyang.ac.kr/home",
             "eligibility": ["TOEIC 900점 이상 또는 TOEFL iBT 100점 이상", "직전 학기 평점 3.0 이상", "어학성적 유효기간 내 제출", "재학생 (휴학생 제외)"]
