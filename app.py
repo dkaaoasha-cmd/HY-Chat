@@ -140,7 +140,9 @@ def generate_dummy_data():
             "amount": "등록금 100%",
             "requirements": {"min_gpa": 4.0, "max_income": 10},
             "deadline": (datetime.now() + timedelta(days=30)).strftime("%Y-%m-%d"),
-            "description": "직전 학기 성적 우수자에게 지급되는 장학금입니다."
+            "description": "직전 학기 성적 우수자에게 지급되는 장학금입니다.",
+            "link": "https://www.hanyang.ac.kr/web/www/scholarship",
+            "eligibility": ["직전 학기 평점 4.0 이상", "재학생 (휴학생 제외)", "성적 장학금 중복 수혜 불가", "학기당 15학점 이상 이수자"]
         },
         {
             "name": "한양 희망 장학금",
@@ -148,7 +150,9 @@ def generate_dummy_data():
             "amount": "등록금 70%",
             "requirements": {"min_gpa": 2.5, "max_income": 4},
             "deadline": (datetime.now() + timedelta(days=45)).strftime("%Y-%m-%d"),
-            "description": "저소득층 학생을 위한 교내 장학금입니다."
+            "description": "저소득층 학생을 위한 교내 장학금입니다.",
+            "link": "https://www.hanyang.ac.kr/web/www/scholarship",
+            "eligibility": ["소득분위 4분위 이하", "직전 학기 평점 2.5 이상", "재학생 (신입생 제외)", "국가장학금 신청 완료자"]
         },
         {
             "name": "국가근로장학금",
@@ -156,7 +160,9 @@ def generate_dummy_data():
             "amount": "시간당 11,150원",
             "requirements": {"min_gpa": 2.0, "max_income": 8},
             "deadline": (datetime.now() + timedelta(days=20)).strftime("%Y-%m-%d"),
-            "description": "교내외 근로를 통해 지급받는 장학금입니다."
+            "description": "교내외 근로를 통해 지급받는 장학금입니다.",
+            "link": "https://www.kosaf.go.kr",
+            "eligibility": ["소득분위 8분위 이하", "직전 학기 평점 2.0 이상 (경고 1회 허용)", "대한민국 국적 소지자", "한국장학재단 국가근로장학금 신청자"]
         },
         {
             "name": "이공계 국가장학금",
@@ -164,7 +170,9 @@ def generate_dummy_data():
             "amount": "등록금 전액 + 생활비",
             "requirements": {"min_gpa": 3.5, "max_income": 6, "major_type": "이공계"},
             "deadline": (datetime.now() + timedelta(days=60)).strftime("%Y-%m-%d"),
-            "description": "이공계 전공 우수 학생을 위한 국가 장학금입니다."
+            "description": "이공계 전공 우수 학생을 위한 국가 장학금입니다.",
+            "link": "https://www.kosaf.go.kr",
+            "eligibility": ["이공계 전공자 (자연과학, 공학 계열)", "소득분위 6분위 이하", "직전 학기 평점 3.5 이상", "졸업 후 의무복무 기간 동의자"]
         },
         {
             "name": "외국어우수장학금",
@@ -172,7 +180,9 @@ def generate_dummy_data():
             "amount": "200만원",
             "requirements": {"min_gpa": 3.0, "max_income": 10},
             "deadline": (datetime.now() + timedelta(days=35)).strftime("%Y-%m-%d"),
-            "description": "TOEIC 900점 이상 또는 동등 수준의 외국어 능력 보유자"
+            "description": "TOEIC 900점 이상 또는 동등 수준의 외국어 능력 보유자",
+            "link": "https://www.hanyang.ac.kr/web/www/scholarship",
+            "eligibility": ["TOEIC 900점 이상 또는 TOEFL iBT 100점 이상", "직전 학기 평점 3.0 이상", "어학성적 유효기간 내 제출", "재학생 (휴학생 제외)"]
         }
     ]
     
@@ -482,6 +492,13 @@ def render_scholarship_matcher():
                     st.markdown(f"**신청 기한:** {scholarship['deadline']}")
                     st.markdown(f"**최소 학점:** {scholarship['requirements']['min_gpa']}")
                     st.markdown(f"**소득분위 제한:** {scholarship['requirements']['max_income']}분위 이하")
+                    st.markdown("---")
+                    st.markdown("**📝 신청 자격조건:**")
+                    for req in scholarship.get('eligibility', []):
+                        st.markdown(f"• {req}")
+                    if scholarship.get('link'):
+                        st.markdown("---")
+                        st.markdown(f"🔗 [장학금 신청 바로가기]({scholarship['link']})")
             
             st.markdown("---")
 
@@ -554,6 +571,33 @@ def render_career_roadmap():
         with col2:
             st.markdown("#### 📈 역량 격차 분석")
             
+            skill_improvement_guide = {
+                "프로그래밍": {
+                    "reason": "코딩 실습 및 프로젝트 경험 부족",
+                    "solution": "알고리즘 문제 풀이(백준, 프로그래머스), 개인 프로젝트 진행, 오픈소스 기여 활동 추천"
+                },
+                "데이터분석": {
+                    "reason": "통계 및 데이터 처리 도구 활용 경험 부족",
+                    "solution": "Python(Pandas, NumPy) 학습, 캐글 대회 참가, 데이터 분석 관련 수업 이수 권장"
+                },
+                "의사소통": {
+                    "reason": "발표 및 협업 경험 부족",
+                    "solution": "팀 프로젝트 적극 참여, 발표 동아리 활동, 스터디 그룹 리더 경험 쌓기 추천"
+                },
+                "문제해결": {
+                    "reason": "복잡한 문제 분석 및 해결 경험 부족",
+                    "solution": "공모전 참가, 캡스톤 디자인 프로젝트, 케이스 스터디 연습 권장"
+                },
+                "팀워크": {
+                    "reason": "팀 기반 협업 프로젝트 경험 부족",
+                    "solution": "학과 동아리 활동, 그룹 프로젝트 참여, 학생회/봉사단체 활동 추천"
+                },
+                "영어능력": {
+                    "reason": "영어 사용 환경 노출 부족",
+                    "solution": "영어 원서 읽기, 영어 강의 수강, TOEIC/TOEFL 준비, 교환학생 프로그램 고려"
+                }
+            }
+            
             gaps = []
             for skill in categories:
                 gap = required_skills[skill] - user_skills[skill]
@@ -563,11 +607,13 @@ def render_career_roadmap():
             
             for gap_info in gaps:
                 if gap_info["gap"] > 0:
-                    st.markdown(f"**{gap_info['skill']}**: 현재 {gap_info['current']}% → 목표 {gap_info['required']}%")
-                    st.progress(gap_info["current"] / 100)
-                    st.markdown(f"<span style='color: #dc3545;'>부족: {gap_info['gap']}%</span>", unsafe_allow_html=True)
+                    with st.expander(f"⚠️ {gap_info['skill']}: 현재 {gap_info['current']}% → 목표 {gap_info['required']}% (부족: {gap_info['gap']}%)"):
+                        st.progress(gap_info["current"] / 100)
+                        guide = skill_improvement_guide.get(gap_info['skill'], {})
+                        st.markdown(f"**📌 부족한 이유:** {guide.get('reason', '관련 경험 부족')}")
+                        st.markdown(f"**💡 개선 방법:** {guide.get('solution', '관련 활동 참여 권장')}")
                 else:
-                    st.markdown(f"**{gap_info['skill']}**: ✅ 목표 달성!")
+                    st.markdown(f"✅ **{gap_info['skill']}**: 목표 달성! ({gap_info['current']}%)")
                     st.progress(gap_info["current"] / 100)
         
         st.markdown("---")
