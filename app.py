@@ -399,7 +399,6 @@ def render_sidebar():
             <p style="margin: 5px 0;"><strong>📚 전공:</strong> {profile['major']}</p>
             <p style="margin: 5px 0;"><strong>📅 학년:</strong> {profile['grade']}학년 {profile['semester']}학기</p>
             <p style="margin: 5px 0;"><strong>📊 학점:</strong> {profile['gpa']}/4.5</p>
-            <p style="margin: 5px 0;"><strong>💰 소득분위:</strong> {profile['income_level']}분위</p>
             <p style="margin: 5px 0;"><strong>🎯 관심직무:</strong> {profile['interest_career']}</p>
         </div>
         """, unsafe_allow_html=True)
@@ -711,7 +710,7 @@ def render_scholarship_matcher():
     st.markdown(f"""
     <div style="background: linear-gradient(135deg, #0E4A84 0%, #1a6fc4 100%); padding: 20px; border-radius: 12px; color: white; margin-bottom: 20px;">
         <h4 style="margin: 0;">👤 {profile['name']}님의 프로필 기반 추천</h4>
-        <p style="margin: 10px 0 0 0;">학점: {profile['gpa']}/4.5 | 소득분위: {profile['income_level']}분위 | 전공: {profile['major']}</p>
+        <p style="margin: 10px 0 0 0;">학점: {profile['gpa']}/4.5 | 전공: {profile['major']}</p>
     </div>
     """, unsafe_allow_html=True)
     
