@@ -73,26 +73,23 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 def generate_dummy_data():
-    majors = ["컴퓨터소프트웨어학부", "전자공학부", "경영학과", "건축학과", "화학공학과", "기계공학과", "의예과", "국어국문학과"]
-    careers = ["소프트웨어 개발자", "데이터 사이언티스트", "금융 애널리스트", "건축가", "연구원", "컨설턴트", "의사", "마케터"]
-    
     user_profile = {
-        "student_id": f"2022{random.randint(10000, 99999)}",
-        "name": random.choice(["김한양", "이서울", "박성동", "최안산", "정에리카"]),
-        "major": random.choice(majors),
-        "grade": random.randint(1, 4),
-        "semester": random.randint(1, 2),
-        "gpa": round(random.uniform(2.5, 4.5), 2),
-        "income_level": random.randint(1, 10),
-        "interest_career": random.choice(careers),
-        "completed_credits": random.randint(30, 130),
+        "student_id": "2022067365",
+        "name": "박성동",
+        "major": "기계공학과",
+        "grade": 4,
+        "semester": 1,
+        "gpa": 3.54,
+        "income_level": 1,
+        "interest_career": "데이터 사이언티스트",
+        "completed_credits": 105,
         "skills": {
-            "프로그래밍": random.randint(30, 100),
-            "데이터분석": random.randint(30, 100),
-            "의사소통": random.randint(30, 100),
-            "문제해결": random.randint(30, 100),
-            "팀워크": random.randint(30, 100),
-            "영어능력": random.randint(30, 100),
+            "프로그래밍": 70,
+            "데이터분석": 83,
+            "의사소통": 72,
+            "문제해결": 35,
+            "팀워크": 88,
+            "영어능력": 65,
         }
     }
     
