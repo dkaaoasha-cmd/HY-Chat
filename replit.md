@@ -1,47 +1,40 @@
-# HY-Chat (한양챗)
+# 한양챗 (HY-Chat) - 한양대학교 AI 비서 PoC
 
-## Overview
+## 프로젝트 개요
+한양대학교 학생들을 위한 AI 맞춤형 비서 서비스 PoC입니다. Streamlit과 Python을 사용하여 구축되었습니다.
 
-HY-Chat is a Streamlit-based web application designed for Hanyang University. The application appears to be a chat or information interface with a professional Korean university branding, featuring interactive data visualizations and a tabbed interface design. The project uses Hanyang University's signature blue color (#0E4A84) throughout its styling.
+## 핵심 기능
 
-## User Preferences
+### 1. AI 학사 챗봇
+- 학사 관련 질문에 대한 답변 제공
+- 지원 키워드: 수강신청, 휴학, 졸업, 전과, 복수전공, 장학금, 등록금
+- 출처 링크 및 관련 규정 카드 표시
 
-Preferred communication style: Simple, everyday language.
+### 2. 맞춤형 장학금 추천
+- 사용자 프로필 기반 장학금 매칭
+- 매칭 점수를 진행 바로 시각화
+- 상세보기 기능으로 선발 요강 및 신청 기한 확인
 
-## System Architecture
+### 3. 전공 진로 로드맵
+- 희망 진로별 필수 역량 vs 보유 역량 레이더 차트
+- 부족 역량 보완을 위한 추천 과목 및 대외활동
+- 타임라인 형태의 성장 로드맵
 
-### Frontend Framework
-- **Streamlit**: Chosen as the primary web framework for rapid prototyping and data-driven applications
-  - Provides built-in widgets, layouts, and state management
-  - Wide layout configuration for better content display
-  - Expandable sidebar for navigation/settings
+## 기술 스택
+- **Framework**: Streamlit
+- **시각화**: Plotly (레이더 차트, 타임라인)
+- **데이터**: 더미 데이터 시뮬레이션
 
-### Visualization Layer
-- **Plotly (Graph Objects & Express)**: Used for interactive data visualizations
-  - Supports complex, interactive charts
-  - Works seamlessly with Streamlit's rendering
+## 실행 방법
+```bash
+streamlit run app.py --server.port 5000
+```
 
-### Styling Approach
-- Custom CSS injected via `st.markdown()` for university branding
-- Gradient-based card designs for scholarship information
-- Tab-based navigation with custom styling overrides
+## 디자인 가이드
+- 메인 테마 색상: #0E4A84 (한양대학교 Blue)
+- 탭 기반 네비게이션으로 세 가지 기능 전환
+- 스피너로 AI 구동 느낌 제공
 
-### Application Structure
-- Single-file architecture (`app.py`) containing all application logic
-- `main.py` exists as a placeholder/entry point but is not the primary application
-
-## External Dependencies
-
-### Python Packages
-- **streamlit**: Web application framework
-- **plotly**: Interactive charting library (graph_objects and express modules)
-
-### Standard Library Usage
-- `random`: For generating random data/content
-- `time`: For timing operations
-- `datetime`: For date/time handling
-
-### No External Services Currently Integrated
-- No database connections detected
-- No external API integrations
-- No authentication system implemented
+## 파일 구조
+- `app.py`: 메인 애플리케이션 (더미 데이터, UI, 로직 포함)
+- `.streamlit/config.toml`: Streamlit 서버 설정
