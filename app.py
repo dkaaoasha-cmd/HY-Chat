@@ -384,10 +384,230 @@ def render_sidebar():
 
 def render_chatbot():
     st.markdown("### 💬 AI 학사 챗봇")
-    st.markdown("학사 관련 궁금한 점을 질문해 주세요!")
+    st.markdown("학사 관련 궁금한 점을 질문해 주세요! 아래 키워드를 선택하거나 직접 입력할 수 있습니다.")
     
     if "messages" not in st.session_state:
         st.session_state.messages = []
+    if "selected_category" not in st.session_state:
+        st.session_state.selected_category = None
+    
+    chatbot_categories = {
+        "📝 수강신청": {
+            "icon": "📝",
+            "subcategories": {
+                "수강신청 기간": "수강신청 기간이 언제인가요?",
+                "수강신청 방법": "수강신청은 어떻게 하나요?",
+                "수강 정정": "수강 정정 기간과 방법이 궁금해요",
+                "수강 취소": "수강 취소는 어떻게 하나요?",
+                "재수강 규정": "재수강 규정이 어떻게 되나요?"
+            }
+        },
+        "🏠 기숙사": {
+            "icon": "🏠",
+            "subcategories": {
+                "기숙사 신청": "기숙사 신청 방법을 알려주세요",
+                "기숙사 비용": "기숙사 비용이 얼마인가요?",
+                "입퇴사 일정": "기숙사 입퇴사 일정이 궁금해요",
+                "기숙사 규정": "기숙사 생활 규정을 알려주세요",
+                "호실 배정": "기숙사 호실 배정은 어떻게 되나요?"
+            }
+        },
+        "📋 학사 행정": {
+            "icon": "📋",
+            "subcategories": {
+                "휴학 신청": "휴학은 어떻게 신청하나요?",
+                "복학 신청": "복학 절차가 어떻게 되나요?",
+                "전과 신청": "전과 신청 방법을 알려주세요",
+                "복수전공": "복수전공 신청 조건이 뭔가요?",
+                "학적 증명서": "학적 증명서 발급 방법이 궁금해요"
+            }
+        },
+        "🎓 졸업": {
+            "icon": "🎓",
+            "subcategories": {
+                "졸업 요건": "졸업 요건이 어떻게 되나요?",
+                "졸업 학점": "졸업에 필요한 학점이 몇 학점인가요?",
+                "영어 졸업인증": "영어 졸업인증 기준이 뭔가요?",
+                "졸업 논문": "졸업 논문/시험은 어떻게 되나요?",
+                "조기 졸업": "조기 졸업 조건이 뭔가요?"
+            }
+        },
+        "💰 등록금/장학": {
+            "icon": "💰",
+            "subcategories": {
+                "등록금 납부": "등록금 납부 방법을 알려주세요",
+                "등록금 분납": "등록금 분할 납부가 가능한가요?",
+                "장학금 종류": "어떤 장학금이 있나요?",
+                "장학금 신청": "장학금 신청은 어떻게 하나요?",
+                "국가장학금": "국가장학금 신청 방법이 궁금해요"
+            }
+        }
+    }
+    
+    detailed_responses = {
+        "수강신청 기간": {
+            "answer": "2024-1학기 수강신청은 2월 19일(월)부터 2월 23일(금)까지입니다. 학년별로 수강신청 시간이 다르니 포털에서 본인의 수강신청 시간을 꼭 확인하세요. 수강신청 전 장바구니에 희망 과목을 미리 담아두시기 바랍니다.",
+            "link": "https://portal.hanyang.ac.kr",
+            "regulation": "학칙 제42조 (수강신청)"
+        },
+        "수강신청 방법": {
+            "answer": "수강신청은 한양대학교 포털시스템(portal.hanyang.ac.kr)에서 진행됩니다. 1) 포털 로그인 → 2) 학사행정 → 3) 수강신청 → 4) 과목 검색 및 신청 순서로 진행하세요. 수강신청 전 장바구니 기능을 활용하여 미리 과목을 담아두면 편리합니다.",
+            "link": "https://portal.hanyang.ac.kr",
+            "regulation": "학칙 제42조 (수강신청)"
+        },
+        "수강 정정": {
+            "answer": "수강 정정 기간은 개강 후 1주일간 진행됩니다. 수강신청과 동일하게 포털시스템에서 과목을 추가하거나 삭제할 수 있습니다. 정정 기간에는 수강 인원 제한이 완화되어 여석이 있는 과목에 추가 신청이 가능합니다.",
+            "link": "https://portal.hanyang.ac.kr",
+            "regulation": "학칙 제43조 (수강정정)"
+        },
+        "수강 취소": {
+            "answer": "수강 취소는 학기 중 일정 기간 내에 가능합니다. 취소된 과목은 성적표에 'W'로 표기되며, 학기당 취소 가능 학점 제한이 있습니다. 수강 취소 기간은 학사일정에서 확인하세요.",
+            "link": "https://portal.hanyang.ac.kr",
+            "regulation": "학칙 제44조 (수강취소)"
+        },
+        "재수강 규정": {
+            "answer": "재수강은 C+ 이하 성적을 받은 과목에 대해 가능합니다. 재수강 시 기존 성적은 삭제되고 새 성적으로 대체됩니다. 단, 재수강으로 받을 수 있는 최고 성적은 A0입니다. 동일 과목은 최대 2회까지 재수강 가능합니다.",
+            "link": "https://www.hanyang.ac.kr/web/www/re-enrollment",
+            "regulation": "학칙 제45조 (재수강)"
+        },
+        "기숙사 신청": {
+            "answer": "기숙사 신청은 매 학기 초 한양대학교 기숙사 홈페이지에서 진행됩니다. 신청 기간 내에 온라인으로 신청하며, 성적, 거리, 소득분위 등을 종합하여 선발합니다. 합격 여부는 기숙사 홈페이지에서 확인 가능합니다.",
+            "link": "https://dorm.hanyang.ac.kr",
+            "regulation": "기숙사 운영규정 제5조"
+        },
+        "기숙사 비용": {
+            "answer": "기숙사비는 기숙사 유형(2인실, 4인실 등)과 식사 포함 여부에 따라 다릅니다. 2024년 기준 2인실 약 150만원~180만원(학기), 4인실 약 100만원~130만원(학기) 수준입니다. 정확한 금액은 기숙사 홈페이지에서 확인하세요.",
+            "link": "https://dorm.hanyang.ac.kr",
+            "regulation": "기숙사 운영규정 제12조"
+        },
+        "입퇴사 일정": {
+            "answer": "입사일은 개강 2~3일 전, 퇴사일은 종강 후 2~3일 이내입니다. 정확한 일정은 매 학기 기숙사 공지사항에서 확인하세요. 조기 퇴사나 방학 중 잔류는 별도 신청이 필요합니다.",
+            "link": "https://dorm.hanyang.ac.kr",
+            "regulation": "기숙사 운영규정 제8조"
+        },
+        "기숙사 규정": {
+            "answer": "기숙사 주요 규정: 1) 통금시간 준수 (24시) 2) 외부인 출입 금지 3) 음주/흡연 금지 4) 취사 금지 (지정 장소 제외) 5) 소음 규제 등이 있습니다. 규정 위반 시 벌점이 부과되며, 누적 시 퇴사 조치될 수 있습니다.",
+            "link": "https://dorm.hanyang.ac.kr",
+            "regulation": "기숙사 생활규정"
+        },
+        "호실 배정": {
+            "answer": "호실 배정은 기숙사 선발 후 무작위 또는 선착순으로 진행됩니다. 룸메이트 신청 기능을 통해 원하는 친구와 같은 방을 사용할 수도 있습니다. 배정 결과는 기숙사 홈페이지에서 확인 가능합니다.",
+            "link": "https://dorm.hanyang.ac.kr",
+            "regulation": "기숙사 운영규정 제7조"
+        },
+        "휴학 신청": {
+            "answer": "휴학 신청은 한양대학교 포털시스템(portal.hanyang.ac.kr)에서 가능합니다. 일반휴학, 군휴학, 임신·출산 휴학 등이 있으며, 등록금 납부 전에 신청해야 합니다. 휴학 기간은 1년 단위이며, 최대 4년까지 가능합니다.",
+            "link": "https://www.hanyang.ac.kr/web/www/leave",
+            "regulation": "학칙 제31조 (휴학)"
+        },
+        "복학 신청": {
+            "answer": "복학은 휴학 기간 종료 전 포털시스템에서 신청합니다. 군휴학의 경우 전역 후 복학 신청하며, 복학 시 소속 학과와 학년이 유지됩니다. 복학 신청 기간은 학사일정을 확인하세요.",
+            "link": "https://www.hanyang.ac.kr/web/www/return",
+            "regulation": "학칙 제32조 (복학)"
+        },
+        "전과 신청": {
+            "answer": "전과는 2학년 이상, 평점 3.0 이상인 학생만 신청 가능합니다. 매 학기 초에 신청 기간이 공지되며, 전과 정원 및 세부 조건은 학과별로 다릅니다. 전과 신청서와 성적증명서를 제출해야 합니다.",
+            "link": "https://www.hanyang.ac.kr/web/www/change_major",
+            "regulation": "학칙 제28조 (전과)"
+        },
+        "복수전공": {
+            "answer": "복수전공은 주전공 36학점 이상 취득 후 신청 가능합니다. 복수전공 이수를 위해서는 해당 전공의 필수과목을 포함하여 36학점 이상을 이수해야 합니다. 신청 기간은 매 학기 학사일정에서 확인하세요.",
+            "link": "https://www.hanyang.ac.kr/web/www/double_major",
+            "regulation": "학칙 제25조 (복수전공)"
+        },
+        "학적 증명서": {
+            "answer": "학적 증명서(재학증명서, 성적증명서 등)는 포털시스템 또는 무인발급기에서 발급 가능합니다. 영문 증명서도 발급 가능하며, 일부 증명서는 수수료가 발생할 수 있습니다.",
+            "link": "https://portal.hanyang.ac.kr",
+            "regulation": "학사운영규정 제15조"
+        },
+        "졸업 요건": {
+            "answer": "졸업을 위해서는 ① 130학점 이상 취득 ② 전공필수 과목 이수 ③ 교양필수 과목 이수 ④ 영어졸업인증 ⑤ 졸업논문/시험이 필요합니다. 세부 요건은 학과별로 다를 수 있으니 학과 사무실에 문의하세요.",
+            "link": "https://www.hanyang.ac.kr/web/www/graduation",
+            "regulation": "학칙 제55조 (졸업요건)"
+        },
+        "졸업 학점": {
+            "answer": "졸업에 필요한 최소 학점은 130학점입니다. 전공 최소 이수학점, 교양 최소 이수학점 등 세부 요건이 있으며, 복수전공/부전공 시 추가 학점이 필요합니다. 자세한 내용은 학과 교육과정을 확인하세요.",
+            "link": "https://www.hanyang.ac.kr/web/www/graduation",
+            "regulation": "학칙 제55조 (졸업요건)"
+        },
+        "영어 졸업인증": {
+            "answer": "영어 졸업인증 기준: TOEIC 700점 이상, TOEFL iBT 71점 이상, TEPS 556점 이상 등입니다. 영어 강의 일정 학점 이수로도 대체 가능합니다. 인증 기준은 입학년도에 따라 다를 수 있으니 확인이 필요합니다.",
+            "link": "https://www.hanyang.ac.kr/web/www/english_cert",
+            "regulation": "졸업인증규정 제3조"
+        },
+        "졸업 논문": {
+            "answer": "졸업논문 또는 졸업시험은 학과별로 운영 방식이 다릅니다. 일부 학과는 논문 제출, 일부 학과는 졸업시험, 일부 학과는 캡스톤 프로젝트로 대체합니다. 본인 학과의 졸업 요건을 확인하세요.",
+            "link": "https://www.hanyang.ac.kr/web/www/thesis",
+            "regulation": "학칙 제56조 (졸업논문)"
+        },
+        "조기 졸업": {
+            "answer": "조기 졸업은 평점 4.0 이상, 130학점 이상 취득, 모든 졸업 요건 충족 시 신청 가능합니다. 최소 6학기 이상 등록해야 하며, 조기 졸업 신청은 졸업 예정 학기 초에 학과에 신청합니다.",
+            "link": "https://www.hanyang.ac.kr/web/www/early_graduation",
+            "regulation": "학칙 제57조 (조기졸업)"
+        },
+        "등록금 납부": {
+            "answer": "등록금 납부는 매 학기 초 고지서 발송 후 지정된 기간 내에 납부해야 합니다. 가상계좌 이체, 신용카드, 은행 창구 납부 등이 가능합니다. 납부 기한을 놓치면 미등록 처리될 수 있으니 주의하세요.",
+            "link": "https://finance.hanyang.ac.kr",
+            "regulation": "학칙 제17조 (등록금)"
+        },
+        "등록금 분납": {
+            "answer": "등록금 분할 납부(분납)는 2~4회 분할이 가능합니다. 분납 신청은 등록금 납부 기간 전에 포털시스템에서 신청해야 합니다. 분납 시 추가 수수료는 없으나, 각 회차 납부 기한을 준수해야 합니다.",
+            "link": "https://finance.hanyang.ac.kr",
+            "regulation": "등록금규정 제8조"
+        },
+        "장학금 종류": {
+            "answer": "한양대학교는 성적장학금(한양브레인), 소득연계장학금(한양희망), 근로장학금, 외국어우수장학금, 봉사장학금 등 다양한 교내장학금과 국가장학금, 외부장학금을 제공합니다. 자세한 내용은 장학안내 페이지에서 확인하세요.",
+            "link": "https://sc.hanyang.ac.kr/home",
+            "regulation": "장학규정 제5조"
+        },
+        "장학금 신청": {
+            "answer": "장학금 신청은 매 학기 초 포털시스템 또는 장학안내 홈페이지에서 가능합니다. 장학금 종류별로 신청 기간과 방법이 다르니 공지사항을 확인하세요. 국가장학금은 한국장학재단(kosaf.go.kr)에서 별도 신청해야 합니다.",
+            "link": "https://sc.hanyang.ac.kr/home",
+            "regulation": "장학규정 제10조"
+        },
+        "국가장학금": {
+            "answer": "국가장학금은 한국장학재단(kosaf.go.kr)에서 신청합니다. 소득분위에 따라 지원 금액이 달라지며, 1~3구간은 학기당 최대 285만원까지 지원됩니다. 신청 기간은 매 학기 시작 전 약 2개월간입니다.",
+            "link": "https://www.kosaf.go.kr",
+            "regulation": "국가장학금 운영규정"
+        }
+    }
+    
+    st.markdown("---")
+    st.markdown("##### 🔍 키워드로 빠르게 찾기")
+    
+    cols = st.columns(5)
+    for idx, (category, data) in enumerate(chatbot_categories.items()):
+        with cols[idx]:
+            if st.button(category, key=f"cat_{idx}"):
+                st.session_state.selected_category = category
+                st.session_state.selected_subcategory = None
+                st.rerun()
+    
+    if st.session_state.selected_category:
+        category = st.session_state.selected_category
+        st.markdown(f"##### {category} 관련 질문")
+        
+        subcats = chatbot_categories[category]["subcategories"]
+        sub_cols = st.columns(len(subcats))
+        
+        for idx, (subcat_name, subcat_query) in enumerate(subcats.items()):
+            with sub_cols[idx]:
+                if st.button(subcat_name, key=f"sub_{idx}"):
+                    st.session_state.messages.append({"role": "user", "content": subcat_query})
+                    response = detailed_responses.get(subcat_name, get_chatbot_response(subcat_query, []))
+                    st.session_state.messages.append({
+                        "role": "assistant",
+                        "content": response["answer"],
+                        "metadata": {"link": response["link"], "regulation": response["regulation"]}
+                    })
+                    st.session_state.selected_category = None
+                    st.rerun()
+        
+        if st.button("← 카테고리 다시 선택", key="back_btn"):
+            st.session_state.selected_category = None
+            st.rerun()
+    
+    st.markdown("---")
     
     for message in st.session_state.messages:
         with st.chat_message(message["role"]):
@@ -409,7 +629,7 @@ def render_chatbot():
                     </div>
                     """, unsafe_allow_html=True)
     
-    if prompt := st.chat_input("예: 수강신청 기간이 언제야?"):
+    if prompt := st.chat_input("직접 질문을 입력하세요 (예: 수강신청 기간이 언제야?)"):
         st.session_state.messages.append({"role": "user", "content": prompt})
         
         with st.chat_message("user"):
