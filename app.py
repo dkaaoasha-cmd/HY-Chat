@@ -442,6 +442,16 @@ def render_chatbot():
                 "장학금 신청": "장학금 신청은 어떻게 하나요?",
                 "국가장학금": "국가장학금 신청 방법이 궁금해요"
             }
+        },
+        "👨‍🏫 교수님 정보": {
+            "icon": "👨‍🏫",
+            "subcategories": {
+                "노미나 교수님": "노미나 교수님 연구 분야가 뭔가요?",
+                "박용수 교수님": "박용수 교수님 연구실 정보를 알려주세요",
+                "박희진 교수님": "박희진 교수님 연구 분야가 뭔가요?",
+                "차재혁 교수님": "차재혁 교수님 연구실 정보를 알려주세요",
+                "조동현 교수님": "조동현 교수님 연구 분야가 뭔가요?"
+            }
         }
     }
     
@@ -570,13 +580,38 @@ def render_chatbot():
             "answer": "국가장학금은 한국장학재단(kosaf.go.kr)에서 신청합니다. 소득분위에 따라 지원 금액이 달라지며, 1~3구간은 학기당 최대 285만원까지 지원됩니다. 신청 기간은 매 학기 시작 전 약 2개월간입니다.",
             "link": "https://www.kosaf.go.kr",
             "regulation": "국가장학금 운영규정"
+        },
+        "노미나 교수님": {
+            "answer": "**노미나 교수님** (컴퓨터소프트웨어학부)\n\n**연구 분야**: DNA Computing, 바이오인포매틱스, 분자 컴퓨팅\n\n**연락처**: 02-2220-2379\n\n**이메일**: minarho@hanyang.ac.kr\n\n**연구실**: DNA Computing Lab\n\n**연구실 위치**: 정보통신관(ITBT관)",
+            "link": "http://dna.hanyang.ac.kr",
+            "regulation": "컴퓨터소프트웨어학부"
+        },
+        "박용수 교수님": {
+            "answer": "**박용수 교수님** (컴퓨터소프트웨어학부)\n\n**연구 분야**: 정보보안, 시스템 보안, 네트워크 보안, 암호학\n\n**연락처**: 02-2220-2382\n\n**이메일**: yongsu@hanyang.ac.kr\n\n**연구실**: Security Lab\n\n**연구실 위치**: 정보통신관(ITBT관)",
+            "link": "http://securitylab.hanyang.ac.kr",
+            "regulation": "컴퓨터소프트웨어학부"
+        },
+        "박희진 교수님": {
+            "answer": "**박희진 교수님** (컴퓨터소프트웨어학부)\n\n**연구 분야**: 알고리즘, 자료구조, 계산이론, 최적화\n\n**연락처**: 02-2220-1986\n\n**이메일**: hjpark@hanyang.ac.kr\n\n**연구실**: Algorithm Lab\n\n**연구실 위치**: 정보통신관(ITBT관)",
+            "link": "https://algorithm.hanyang.ac.kr",
+            "regulation": "컴퓨터소프트웨어학부"
+        },
+        "차재혁 교수님": {
+            "answer": "**차재혁 교수님** (컴퓨터소프트웨어학부 학부장)\n\n**연구 분야**: 데이터베이스, 빅데이터 처리, 데이터 관리 시스템\n\n**연락처**: 02-2220-1158\n\n**이메일**: chajh@hanyang.ac.kr\n\n**연구실**: Database Lab\n\n**연구실 위치**: 정보통신관(ITBT관)",
+            "link": "http://db.hanyang.ac.kr",
+            "regulation": "컴퓨터소프트웨어학부"
+        },
+        "조동현 교수님": {
+            "answer": "**조동현 교수님** (컴퓨터소프트웨어학부 부교수)\n\n**연구 분야**: 컴퓨터 비전, 영상 처리, 딥러닝, 패턴인식\n\n**연락처**: 02-2220-2657\n\n**이메일**: doncho@hanyang.ac.kr\n\n**연구실**: Computer Vision Lab\n\n**연구실 위치**: 정보통신관(ITBT관)",
+            "link": "https://sites.google.com/view/hyu-cv",
+            "regulation": "컴퓨터소프트웨어학부"
         }
     }
     
     st.markdown("---")
     st.markdown("##### 🔍 키워드로 빠르게 찾기")
     
-    cols = st.columns(5)
+    cols = st.columns(6)
     for idx, (category, data) in enumerate(chatbot_categories.items()):
         with cols[idx]:
             if st.button(category, key=f"cat_{idx}"):
@@ -1010,121 +1045,197 @@ def render_career_roadmap():
             st.session_state.calendar_month = today.month
             st.rerun()
         
-        activities_by_date = {}
-        for activity in filtered_activities:
-            start = datetime.strptime(activity["start_date"], "%Y-%m-%d")
-            end = datetime.strptime(activity["end_date"], "%Y-%m-%d")
-            current = start
-            while current <= end:
-                date_key = current.strftime("%Y-%m-%d")
-                if date_key not in activities_by_date:
-                    activities_by_date[date_key] = []
-                activities_by_date[date_key].append(activity)
-                current += timedelta(days=1)
-        
         st.markdown("""
         <style>
-        .calendar-header {
+        .cal-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 1px;
+            background-color: #e0e0e0;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .cal-header {
             background-color: #0E4A84;
             color: white;
             padding: 10px;
             text-align: center;
             font-weight: bold;
-            border-radius: 5px;
-            margin: 2px;
         }
-        .calendar-day {
-            min-height: 100px;
-            border: 1px solid #e0e0e0;
-            border-radius: 5px;
+        .cal-header-sat { background-color: #0066cc; }
+        .cal-header-sun { background-color: #dc3545; }
+        .cal-day {
+            background-color: #fff;
+            min-height: 90px;
             padding: 5px;
-            margin: 2px;
-            background-color: #fafafa;
+            vertical-align: top;
         }
-        .calendar-day-today {
-            min-height: 100px;
-            border: 2px solid #0E4A84;
-            border-radius: 5px;
-            padding: 5px;
-            margin: 2px;
-            background-color: #e3f2fd;
-        }
-        .calendar-day-number {
+        .cal-day-empty { background-color: #f5f5f5; }
+        .cal-day-today { background-color: #e3f2fd; border: 2px solid #0E4A84; }
+        .cal-day-num {
             font-weight: bold;
             font-size: 14px;
-            margin-bottom: 5px;
+            margin-bottom: 3px;
         }
-        .calendar-day-number-today {
-            font-weight: bold;
-            font-size: 14px;
-            margin-bottom: 5px;
-            color: #0E4A84;
-        }
-        .calendar-event {
-            font-size: 11px;
+        .cal-day-num-today { color: #0E4A84; }
+        .cal-event-bar {
+            font-size: 10px;
             padding: 2px 4px;
             margin: 1px 0;
-            border-radius: 3px;
             color: white;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
+            display: block;
         }
-        .calendar-day-empty {
-            min-height: 100px;
-            border: 1px solid #f0f0f0;
-            border-radius: 5px;
-            padding: 5px;
-            margin: 2px;
-            background-color: #f5f5f5;
+        .cal-event-start {
+            border-radius: 4px 0 0 4px;
+            margin-right: -5px;
+        }
+        .cal-event-middle {
+            border-radius: 0;
+            margin-left: -5px;
+            margin-right: -5px;
+        }
+        .cal-event-end {
+            border-radius: 0 4px 4px 0;
+            margin-left: -5px;
+        }
+        .cal-event-single {
+            border-radius: 4px;
+        }
+        .cal-more {
+            font-size: 9px;
+            color: #666;
+            padding: 1px 2px;
         }
         </style>
         """, unsafe_allow_html=True)
         
         weekdays = ["월", "화", "수", "목", "금", "토", "일"]
-        header_cols = st.columns(7)
-        for i, day in enumerate(weekdays):
-            with header_cols[i]:
-                color = "#dc3545" if i == 6 else ("#0066cc" if i == 5 else "#0E4A84")
-                st.markdown(f"<div class='calendar-header' style='background-color: {color};'>{day}</div>", unsafe_allow_html=True)
         
-        cal = calendar.Calendar(firstweekday=0)
-        month_days = cal.monthdayscalendar(st.session_state.calendar_year, st.session_state.calendar_month)
+        cal_module = calendar.Calendar(firstweekday=0)
+        month_days = cal_module.monthdayscalendar(st.session_state.calendar_year, st.session_state.calendar_month)
+        
+        header_html = ""
+        for i, day_name in enumerate(weekdays):
+            header_class = "cal-header"
+            if i == 5:
+                header_class += " cal-header-sat"
+            elif i == 6:
+                header_class += " cal-header-sun"
+            header_html += f"<div class='{header_class}'>{day_name}</div>"
+        
+        def get_week_dates(week, year, month):
+            dates = []
+            for day in week:
+                if day == 0:
+                    dates.append(None)
+                else:
+                    dates.append(datetime(year, month, day))
+            return dates
+        
+        def get_events_for_week(week_dates, activities):
+            week_events = []
+            for act in activities:
+                start = datetime.strptime(act["start_date"], "%Y-%m-%d")
+                end = datetime.strptime(act["end_date"], "%Y-%m-%d")
+                
+                week_start_idx = None
+                week_end_idx = None
+                
+                for idx, date in enumerate(week_dates):
+                    if date is None:
+                        continue
+                    if start <= date <= end:
+                        if week_start_idx is None:
+                            week_start_idx = idx
+                        week_end_idx = idx
+                
+                if week_start_idx is not None:
+                    is_event_start = week_dates[week_start_idx] and week_dates[week_start_idx].date() == start.date()
+                    is_event_end = week_dates[week_end_idx] and week_dates[week_end_idx].date() == end.date()
+                    week_events.append({
+                        "activity": act,
+                        "start_idx": week_start_idx,
+                        "end_idx": week_end_idx,
+                        "is_event_start": is_event_start,
+                        "is_event_end": is_event_end
+                    })
+            return week_events
+        
+        all_weeks_html = header_html
         
         for week in month_days:
-            week_cols = st.columns(7)
+            week_dates = get_week_dates(week, st.session_state.calendar_year, st.session_state.calendar_month)
+            week_events = get_events_for_week(week_dates, filtered_activities)
+            
+            events_by_day = {i: [] for i in range(7)}
+            for evt in week_events:
+                for idx in range(evt["start_idx"], evt["end_idx"] + 1):
+                    events_by_day[idx].append(evt)
+            
             for i, day in enumerate(week):
-                with week_cols[i]:
-                    if day == 0:
-                        st.markdown("<div class='calendar-day-empty'></div>", unsafe_allow_html=True)
-                    else:
-                        date_str = f"{st.session_state.calendar_year}-{st.session_state.calendar_month:02d}-{day:02d}"
-                        is_today = (day == today.day and 
-                                   st.session_state.calendar_month == today.month and 
-                                   st.session_state.calendar_year == today.year)
+                if day == 0:
+                    all_weeks_html += "<div class='cal-day cal-day-empty'></div>"
+                else:
+                    date_obj = week_dates[i]
+                    is_today = (date_obj and date_obj.date() == today.date())
+                    
+                    day_class = "cal-day cal-day-today" if is_today else "cal-day"
+                    num_class = "cal-day-num cal-day-num-today" if is_today else "cal-day-num"
+                    today_marker = " 🔴" if is_today else ""
+                    
+                    events_html = ""
+                    shown_events = set()
+                    event_count = 0
+                    
+                    for evt in events_by_day[i]:
+                        if event_count >= 3:
+                            break
+                        act = evt["activity"]
+                        act_id = act["name"]
                         
-                        day_class = "calendar-day-today" if is_today else "calendar-day"
-                        number_class = "calendar-day-number-today" if is_today else "calendar-day-number"
-                        
-                        day_activities = activities_by_date.get(date_str, [])
-                        
-                        events_html = ""
-                        for act in day_activities[:3]:
+                        if evt["start_idx"] == i:
+                            event_count += 1
+                            shown_events.add(act_id)
+                            
                             color = type_colors.get(act["type"], "#666")
                             icon = type_icons.get(act["type"], "📌")
-                            name_short = act["name"][:8] + "..." if len(act["name"]) > 8 else act["name"]
-                            events_html += f"<div class='calendar-event' style='background-color: {color};'>{icon} {name_short}</div>"
-                        
-                        if len(day_activities) > 3:
-                            events_html += f"<div style='font-size: 10px; color: #666;'>+{len(day_activities) - 3}개 더</div>"
-                        
-                        today_badge = " 🔴" if is_today else ""
-                        st.markdown(f"""
-                        <div class='{day_class}'>
-                            <div class='{number_class}'>{day}{today_badge}</div>
-                            {events_html}
-                        </div>
-                        """, unsafe_allow_html=True)
+                            span = evt["end_idx"] - evt["start_idx"] + 1
+                            
+                            if span == 1:
+                                bar_class = "cal-event-bar cal-event-single"
+                            elif evt["is_event_start"] and evt["is_event_end"]:
+                                bar_class = "cal-event-bar cal-event-single"
+                            elif evt["is_event_start"]:
+                                bar_class = "cal-event-bar cal-event-start"
+                            else:
+                                bar_class = "cal-event-bar cal-event-start"
+                            
+                            name_short = act["name"][:12] + "..." if len(act["name"]) > 12 else act["name"]
+                            events_html += f"<div class='{bar_class}' style='background-color: {color};'>{icon} {name_short}</div>"
+                        elif act_id not in shown_events:
+                            event_count += 1
+                            color = type_colors.get(act["type"], "#666")
+                            
+                            if evt["end_idx"] == i and evt["is_event_end"]:
+                                bar_class = "cal-event-bar cal-event-end"
+                            elif evt["end_idx"] == i:
+                                bar_class = "cal-event-bar cal-event-end"
+                            else:
+                                bar_class = "cal-event-bar cal-event-middle"
+                            
+                            events_html += f"<div class='{bar_class}' style='background-color: {color};'>&nbsp;</div>"
+                    
+                    remaining = len(events_by_day[i]) - event_count
+                    if remaining > 0:
+                        events_html += f"<div class='cal-more'>+{remaining}개 더</div>"
+                    
+                    all_weeks_html += f"<div class='{day_class}'><div class='{num_class}'>{day}{today_marker}</div>{events_html}</div>"
+        
+        st.markdown(f"<div class='cal-grid'>{all_weeks_html}</div>", unsafe_allow_html=True)
         
         st.markdown("---")
         st.markdown("##### 🎨 범례")
