@@ -916,6 +916,309 @@ def render_career_roadmap():
         total_credits = sum(c["credits"] for c in courses if isinstance(c, dict))
         st.markdown("---")
         st.info(f"💡 **추천 근거**: {profile['name']}님의 현재 역량과 {selected_career} 직무의 필수 역량을 비교 분석한 결과입니다. 위 추천 과목은 총 {total_credits}학점이며, 부족한 역량을 중심으로 한양대학교 개설 과목과 대외활동을 제안드립니다.")
+        
+        st.markdown("---")
+        st.markdown("### 📅 공모전 · 인턴 · 대외활동 일정 캘린더")
+        st.markdown("진로 관련 활동의 접수 기간을 한눈에 확인하세요!")
+        
+        career_activities = generate_career_activities(selected_career)
+        
+        activity_sites = {
+            "링커리어": "https://linkareer.com",
+            "위비티": "https://www.wevity.com",
+            "캠퍼스픽": "https://www.campuspick.com",
+            "슥삭": "https://www.ssgsag.kr",
+            "자소설닷컴": "https://jasoseol.com/intern"
+        }
+        
+        st.markdown("##### 🔗 실시간 정보 확인하기")
+        site_cols = st.columns(5)
+        for idx, (site_name, site_url) in enumerate(activity_sites.items()):
+            with site_cols[idx]:
+                st.markdown(f"[{site_name}]({site_url})")
+        
+        st.markdown("---")
+        
+        filter_col1, filter_col2 = st.columns(2)
+        with filter_col1:
+            activity_filter = st.multiselect(
+                "활동 유형 필터",
+                ["공모전", "인턴십", "대외활동", "서포터즈", "해커톤"],
+                default=["공모전", "인턴십", "대외활동", "서포터즈", "해커톤"]
+            )
+        with filter_col2:
+            sort_option = st.selectbox(
+                "정렬 기준",
+                ["마감일순", "시작일순", "이름순"]
+            )
+        
+        filtered_activities = [a for a in career_activities if a["type"] in activity_filter]
+        
+        if sort_option == "마감일순":
+            filtered_activities.sort(key=lambda x: x["end_date"])
+        elif sort_option == "시작일순":
+            filtered_activities.sort(key=lambda x: x["start_date"])
+        else:
+            filtered_activities.sort(key=lambda x: x["name"])
+        
+        today = datetime.now()
+        
+        type_colors = {
+            "공모전": "#0E4A84",
+            "인턴십": "#28a745",
+            "대외활동": "#ffc107",
+            "서포터즈": "#17a2b8",
+            "해커톤": "#dc3545"
+        }
+        
+        fig_calendar = go.Figure()
+        
+        for i, activity in enumerate(filtered_activities):
+            start = datetime.strptime(activity["start_date"], "%Y-%m-%d")
+            end = datetime.strptime(activity["end_date"], "%Y-%m-%d")
+            
+            days_until_deadline = (end - today).days
+            if days_until_deadline < 0:
+                status = "마감"
+            elif days_until_deadline <= 7:
+                status = f"D-{days_until_deadline} 🔥"
+            else:
+                status = f"D-{days_until_deadline}"
+            
+            fig_calendar.add_trace(go.Scatter(
+                x=[start, end],
+                y=[i, i],
+                mode='lines+markers',
+                line=dict(color=type_colors.get(activity["type"], "#666"), width=15),
+                marker=dict(size=10),
+                name=activity["name"],
+                hovertemplate=f"<b>{activity['name']}</b><br>" +
+                              f"유형: {activity['type']}<br>" +
+                              f"기간: {activity['start_date']} ~ {activity['end_date']}<br>" +
+                              f"상태: {status}<br>" +
+                              f"주최: {activity['host']}<extra></extra>"
+            ))
+        
+        fig_calendar.update_layout(
+            title="활동 일정 타임라인",
+            xaxis_title="날짜",
+            yaxis=dict(
+                tickmode='array',
+                tickvals=list(range(len(filtered_activities))),
+                ticktext=[a["name"][:15] + "..." if len(a["name"]) > 15 else a["name"] for a in filtered_activities]
+            ),
+            height=max(300, len(filtered_activities) * 40),
+            showlegend=False,
+            margin=dict(l=150, r=20, t=50, b=50)
+        )
+        
+        if filtered_activities:
+            fig_calendar.add_shape(
+                type="line",
+                x0=today, x1=today,
+                y0=-0.5, y1=len(filtered_activities) - 0.5,
+                line=dict(color="red", width=2, dash="dash")
+            )
+            fig_calendar.add_annotation(
+                x=today, y=len(filtered_activities) - 0.5,
+                text="오늘", showarrow=False,
+                font=dict(color="red", size=12),
+                yshift=15
+            )
+        
+        st.plotly_chart(fig_calendar, width="stretch")
+        
+        st.markdown("##### 📋 활동 상세 목록")
+        
+        for activity in filtered_activities:
+            end = datetime.strptime(activity["end_date"], "%Y-%m-%d")
+            days_until_deadline = (end - today).days
+            
+            if days_until_deadline < 0:
+                status_badge = "🔴 마감"
+                status_color = "#dc3545"
+            elif days_until_deadline <= 3:
+                status_badge = f"🔥 D-{days_until_deadline} 마감임박!"
+                status_color = "#dc3545"
+            elif days_until_deadline <= 7:
+                status_badge = f"⚠️ D-{days_until_deadline}"
+                status_color = "#ffc107"
+            else:
+                status_badge = f"✅ D-{days_until_deadline}"
+                status_color = "#28a745"
+            
+            with st.expander(f"{activity['type']} | {activity['name']} ({status_badge})"):
+                col1, col2 = st.columns(2)
+                with col1:
+                    st.markdown(f"**주최:** {activity['host']}")
+                    st.markdown(f"**접수 기간:** {activity['start_date']} ~ {activity['end_date']}")
+                    st.markdown(f"**대상:** {activity['target']}")
+                with col2:
+                    st.markdown(f"**혜택:** {activity['benefit']}")
+                    st.markdown(f"**관련 분야:** {activity['field']}")
+                    if activity.get("link"):
+                        st.markdown(f"🔗 [상세정보 보기]({activity['link']})")
+
+def generate_career_activities(career):
+    today = datetime.now()
+    
+    base_activities = [
+        {
+            "name": "2024 대학생 창업 아이디어 공모전",
+            "type": "공모전",
+            "start_date": (today - timedelta(days=10)).strftime("%Y-%m-%d"),
+            "end_date": (today + timedelta(days=20)).strftime("%Y-%m-%d"),
+            "host": "중소벤처기업부",
+            "target": "대학생/대학원생",
+            "benefit": "총 상금 3,000만원",
+            "field": "창업/아이디어",
+            "link": "https://linkareer.com"
+        },
+        {
+            "name": "삼성전자 동계 인턴십",
+            "type": "인턴십",
+            "start_date": (today - timedelta(days=5)).strftime("%Y-%m-%d"),
+            "end_date": (today + timedelta(days=15)).strftime("%Y-%m-%d"),
+            "host": "삼성전자",
+            "target": "대학교 3학년 이상",
+            "benefit": "정규직 전환 기회",
+            "field": "IT/전자",
+            "link": "https://www.samsungcareers.com"
+        },
+        {
+            "name": "현대자동차 대학생 서포터즈",
+            "type": "서포터즈",
+            "start_date": (today + timedelta(days=5)).strftime("%Y-%m-%d"),
+            "end_date": (today + timedelta(days=30)).strftime("%Y-%m-%d"),
+            "host": "현대자동차",
+            "target": "대학생",
+            "benefit": "활동비 + 수료증",
+            "field": "마케팅/홍보",
+            "link": "https://linkareer.com"
+        },
+        {
+            "name": "2024 데이터 분석 경진대회",
+            "type": "공모전",
+            "start_date": (today - timedelta(days=3)).strftime("%Y-%m-%d"),
+            "end_date": (today + timedelta(days=25)).strftime("%Y-%m-%d"),
+            "host": "한국데이터산업진흥원",
+            "target": "대학생/일반인",
+            "benefit": "총 상금 5,000만원",
+            "field": "데이터분석/AI",
+            "link": "https://www.wevity.com"
+        },
+        {
+            "name": "네이버 테크 인턴십",
+            "type": "인턴십",
+            "start_date": (today + timedelta(days=10)).strftime("%Y-%m-%d"),
+            "end_date": (today + timedelta(days=40)).strftime("%Y-%m-%d"),
+            "host": "네이버",
+            "target": "컴퓨터공학 전공",
+            "benefit": "인턴 급여 + 정규직 전환",
+            "field": "IT/개발",
+            "link": "https://recruit.navercorp.com"
+        },
+        {
+            "name": "글로벌 마케팅 공모전",
+            "type": "공모전",
+            "start_date": (today - timedelta(days=15)).strftime("%Y-%m-%d"),
+            "end_date": (today + timedelta(days=5)).strftime("%Y-%m-%d"),
+            "host": "한국마케팅협회",
+            "target": "대학생",
+            "benefit": "상금 + 인턴 기회",
+            "field": "마케팅/광고",
+            "link": "https://www.wevity.com"
+        },
+        {
+            "name": "카카오 해커톤 2024",
+            "type": "해커톤",
+            "start_date": (today + timedelta(days=15)).strftime("%Y-%m-%d"),
+            "end_date": (today + timedelta(days=45)).strftime("%Y-%m-%d"),
+            "host": "카카오",
+            "target": "개발자/대학생",
+            "benefit": "상금 + 채용 우대",
+            "field": "IT/개발",
+            "link": "https://www.campuspick.com"
+        },
+        {
+            "name": "ESG 대학생 아이디어 공모전",
+            "type": "공모전",
+            "start_date": (today + timedelta(days=3)).strftime("%Y-%m-%d"),
+            "end_date": (today + timedelta(days=35)).strftime("%Y-%m-%d"),
+            "host": "환경부",
+            "target": "대학생",
+            "benefit": "총 상금 2,000만원",
+            "field": "환경/ESG",
+            "link": "https://linkareer.com"
+        },
+        {
+            "name": "LG 대학생 마케팅 서포터즈",
+            "type": "서포터즈",
+            "start_date": (today - timedelta(days=7)).strftime("%Y-%m-%d"),
+            "end_date": (today + timedelta(days=7)).strftime("%Y-%m-%d"),
+            "host": "LG전자",
+            "target": "대학생 2-4학년",
+            "benefit": "활동비 + LG제품 제공",
+            "field": "마케팅/홍보",
+            "link": "https://www.ssgsag.kr"
+        },
+        {
+            "name": "금융권 체험형 인턴십",
+            "type": "인턴십",
+            "start_date": (today + timedelta(days=20)).strftime("%Y-%m-%d"),
+            "end_date": (today + timedelta(days=50)).strftime("%Y-%m-%d"),
+            "host": "KB국민은행",
+            "target": "경영/경제 전공",
+            "benefit": "인턴 급여 + 멘토링",
+            "field": "금융/경영",
+            "link": "https://jasoseol.com/intern"
+        },
+        {
+            "name": "청년 창업 지원 프로그램",
+            "type": "대외활동",
+            "start_date": (today - timedelta(days=2)).strftime("%Y-%m-%d"),
+            "end_date": (today + timedelta(days=28)).strftime("%Y-%m-%d"),
+            "host": "창업진흥원",
+            "target": "만 39세 이하 청년",
+            "benefit": "창업 자금 + 멘토링",
+            "field": "창업",
+            "link": "https://www.k-startup.go.kr"
+        },
+        {
+            "name": "글로벌 인재 양성 프로그램",
+            "type": "대외활동",
+            "start_date": (today + timedelta(days=8)).strftime("%Y-%m-%d"),
+            "end_date": (today + timedelta(days=38)).strftime("%Y-%m-%d"),
+            "host": "KOTRA",
+            "target": "대학생/대학원생",
+            "benefit": "해외연수 + 수료증",
+            "field": "글로벌/무역",
+            "link": "https://linkareer.com"
+        }
+    ]
+    
+    career_specific = {
+        "소프트웨어 개발자": ["IT/개발", "IT/전자", "데이터분석/AI"],
+        "데이터 사이언티스트": ["데이터분석/AI", "IT/개발"],
+        "금융 애널리스트": ["금융/경영", "데이터분석/AI"],
+        "건축가": ["창업/아이디어", "환경/ESG"],
+        "연구원": ["데이터분석/AI", "환경/ESG"],
+        "컨설턴트": ["금융/경영", "마케팅/광고", "글로벌/무역"],
+        "의사": ["환경/ESG", "창업"],
+        "마케터": ["마케팅/광고", "마케팅/홍보"]
+    }
+    
+    relevant_fields = career_specific.get(career, [])
+    
+    prioritized = []
+    others = []
+    for activity in base_activities:
+        if activity["field"] in relevant_fields:
+            prioritized.append(activity)
+        else:
+            others.append(activity)
+    
+    return prioritized + others
 
 def main():
     st.markdown('<h1 class="main-header">🎓 한양챗 (HY-Chat)</h1>', unsafe_allow_html=True)
