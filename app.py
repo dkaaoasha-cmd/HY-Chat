@@ -1144,27 +1144,14 @@ def render_career_roadmap():
         
         st.markdown("---")
         
-        filter_col1, filter_col2 = st.columns(2)
-        with filter_col1:
-            activity_filter = st.multiselect(
-                "활동 유형 필터",
-                ["공모전", "인턴십", "대외활동", "서포터즈", "해커톤"],
-                default=["공모전", "인턴십", "대외활동", "서포터즈", "해커톤"]
-            )
-        with filter_col2:
-            sort_option = st.selectbox(
-                "정렬 기준",
-                ["마감일순", "시작일순", "이름순"]
-            )
+        activity_filter = st.multiselect(
+            "활동 유형 필터",
+            ["공모전", "인턴십", "대외활동", "서포터즈", "해커톤"],
+            default=["공모전", "인턴십", "대외활동", "서포터즈", "해커톤"]
+        )
         
         filtered_activities = [a for a in career_activities if a["type"] in activity_filter]
-        
-        if sort_option == "마감일순":
-            filtered_activities.sort(key=lambda x: x["end_date"])
-        elif sort_option == "시작일순":
-            filtered_activities.sort(key=lambda x: x["start_date"])
-        else:
-            filtered_activities.sort(key=lambda x: x["name"])
+        filtered_activities.sort(key=lambda x: x["end_date"])
         
         today = datetime.now()
         
