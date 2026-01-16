@@ -723,6 +723,162 @@ def render_scholarship_matcher():
                         st.markdown(f"🔗 [장학금 신청 바로가기]({scholarship['link']})")
             
             st.markdown("---")
+    
+    st.markdown("### 📅 장학금 신청 일정 캘린더")
+    st.markdown("장학금 신청 마감일을 한눈에 확인하세요!")
+    
+    today = datetime.now()
+    
+    scholarship_types = {
+        "성적": {"color": "#0E4A84", "icon": "🏆"},
+        "소득연계": {"color": "#28a745", "icon": "💰"},
+        "근로": {"color": "#ffc107", "icon": "👷"},
+        "외부": {"color": "#17a2b8", "icon": "🌐"},
+        "특별": {"color": "#dc3545", "icon": "⭐"}
+    }
+    
+    if "scholarship_cal_year" not in st.session_state:
+        st.session_state.scholarship_cal_year = today.year
+    if "scholarship_cal_month" not in st.session_state:
+        st.session_state.scholarship_cal_month = today.month
+    
+    nav_col1, nav_col2, nav_col3 = st.columns([1, 2, 1])
+    with nav_col1:
+        if st.button("◀ 이전 달", key="sch_prev"):
+            if st.session_state.scholarship_cal_month == 1:
+                st.session_state.scholarship_cal_month = 12
+                st.session_state.scholarship_cal_year -= 1
+            else:
+                st.session_state.scholarship_cal_month -= 1
+            st.rerun()
+    with nav_col2:
+        st.markdown(f"<h4 style='text-align: center;'>{st.session_state.scholarship_cal_year}년 {st.session_state.scholarship_cal_month}월</h4>", unsafe_allow_html=True)
+    with nav_col3:
+        if st.button("다음 달 ▶", key="sch_next"):
+            if st.session_state.scholarship_cal_month == 12:
+                st.session_state.scholarship_cal_month = 1
+                st.session_state.scholarship_cal_year += 1
+            else:
+                st.session_state.scholarship_cal_month += 1
+            st.rerun()
+    
+    if st.button("📍 오늘로 이동", key="sch_today"):
+        st.session_state.scholarship_cal_year = today.year
+        st.session_state.scholarship_cal_month = today.month
+        st.rerun()
+    
+    st.markdown("""
+    <style>
+    .sch-cal-grid {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 1px;
+        background-color: #e0e0e0;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+    .sch-cal-header {
+        background-color: #0E4A84;
+        color: white;
+        padding: 10px;
+        text-align: center;
+        font-weight: bold;
+    }
+    .sch-cal-header-sat { background-color: #0066cc; }
+    .sch-cal-header-sun { background-color: #dc3545; }
+    .sch-cal-day {
+        background-color: #fff;
+        min-height: 90px;
+        padding: 5px;
+        vertical-align: top;
+    }
+    .sch-cal-day-empty { background-color: #f5f5f5; }
+    .sch-cal-day-today { background-color: #e3f2fd; border: 2px solid #0E4A84; }
+    .sch-cal-day-num {
+        font-weight: bold;
+        font-size: 14px;
+        margin-bottom: 3px;
+    }
+    .sch-cal-day-num-today { color: #0E4A84; }
+    .sch-cal-event {
+        font-size: 10px;
+        padding: 2px 4px;
+        margin: 1px 0;
+        color: white;
+        border-radius: 3px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        display: block;
+    }
+    .sch-cal-more {
+        font-size: 9px;
+        color: #666;
+        padding: 1px 2px;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+    
+    weekdays = ["월", "화", "수", "목", "금", "토", "일"]
+    
+    cal_module = calendar.Calendar(firstweekday=0)
+    month_days = cal_module.monthdayscalendar(st.session_state.scholarship_cal_year, st.session_state.scholarship_cal_month)
+    
+    header_html = ""
+    for i, day_name in enumerate(weekdays):
+        header_class = "sch-cal-header"
+        if i == 5:
+            header_class += " sch-cal-header-sat"
+        elif i == 6:
+            header_class += " sch-cal-header-sun"
+        header_html += f"<div class='{header_class}'>{day_name}</div>"
+    
+    scholarships_by_deadline = {}
+    for sch in scholarship_matches:
+        deadline = sch["deadline"]
+        if deadline not in scholarships_by_deadline:
+            scholarships_by_deadline[deadline] = []
+        scholarships_by_deadline[deadline].append(sch)
+    
+    all_weeks_html = header_html
+    
+    for week in month_days:
+        for i, day in enumerate(week):
+            if day == 0:
+                all_weeks_html += "<div class='sch-cal-day sch-cal-day-empty'></div>"
+            else:
+                date_str = f"{st.session_state.scholarship_cal_year}-{st.session_state.scholarship_cal_month:02d}-{day:02d}"
+                date_obj = datetime(st.session_state.scholarship_cal_year, st.session_state.scholarship_cal_month, day)
+                is_today = (date_obj.date() == today.date())
+                
+                day_class = "sch-cal-day sch-cal-day-today" if is_today else "sch-cal-day"
+                num_class = "sch-cal-day-num sch-cal-day-num-today" if is_today else "sch-cal-day-num"
+                today_marker = " 🔴" if is_today else ""
+                
+                day_scholarships = scholarships_by_deadline.get(date_str, [])
+                
+                events_html = ""
+                for sch in day_scholarships[:3]:
+                    sch_type = sch.get("type", "성적")
+                    color = scholarship_types.get(sch_type, {}).get("color", "#666")
+                    icon = scholarship_types.get(sch_type, {}).get("icon", "📌")
+                    name_short = sch["name"][:10] + "..." if len(sch["name"]) > 10 else sch["name"]
+                    events_html += f"<div class='sch-cal-event' style='background-color: {color};'>{icon} {name_short}</div>"
+                
+                if len(day_scholarships) > 3:
+                    events_html += f"<div class='sch-cal-more'>+{len(day_scholarships) - 3}개 더</div>"
+                
+                all_weeks_html += f"<div class='{day_class}'><div class='{num_class}'>{day}{today_marker}</div>{events_html}</div>"
+    
+    st.markdown(f"<div class='sch-cal-grid'>{all_weeks_html}</div>", unsafe_allow_html=True)
+    
+    st.markdown("---")
+    st.markdown("##### 🎨 범례")
+    legend_cols = st.columns(5)
+    for idx, (type_name, type_info) in enumerate(scholarship_types.items()):
+        with legend_cols[idx]:
+            st.markdown(f"<span style='background-color: {type_info['color']}; color: white; padding: 3px 8px; border-radius: 3px;'>{type_info['icon']} {type_name}</span>", unsafe_allow_html=True)
 
 def render_career_roadmap():
     st.markdown("### 🗺️ 전공 진로 로드맵")
