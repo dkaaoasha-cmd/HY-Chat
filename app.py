@@ -393,29 +393,29 @@ def render_sidebar():
         
         st.markdown(f"""
         <div style="background: linear-gradient(135deg, #0E4A84 0%, #1a6fc4 100%); border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(14, 74, 132, 0.3); margin-bottom: 15px;">
-            <div style="padding: 15px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.2);">
-                <div style="width: 60px; height: 60px; background: white; border-radius: 50%; margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; font-size: 28px;">👤</div>
-                <h3 style="color: white; margin: 0; font-size: 18px;">{profile['name']}</h3>
-                <p style="color: rgba(255,255,255,0.8); margin: 5px 0 0 0; font-size: 13px;">{profile['major']}</p>
+            <div style="padding: 18px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.2);">
+                <div style="width: 70px; height: 70px; background: white; border-radius: 50%; margin: 0 auto 12px; display: flex; align-items: center; justify-content: center; font-size: 34px;">👤</div>
+                <h3 style="color: white; margin: 0; font-size: 22px; font-weight: bold;">{profile['name']}</h3>
+                <p style="color: rgba(255,255,255,0.9); margin: 8px 0 0 0; font-size: 16px;">{profile['major']}</p>
             </div>
-            <div style="padding: 12px;">
-                <div style="background: white; border-radius: 8px; padding: 10px; margin-bottom: 8px;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-                        <span style="color: #666; font-size: 12px;">🔢 학번</span>
-                        <span style="color: #0E4A84; font-weight: bold; font-size: 13px;">{profile['student_id']}</span>
+            <div style="padding: 15px;">
+                <div style="background: white; border-radius: 10px; padding: 14px; margin-bottom: 10px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                        <span style="color: #666; font-size: 15px;">🔢 학번</span>
+                        <span style="color: #0E4A84; font-weight: bold; font-size: 16px;">{profile['student_id']}</span>
                     </div>
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-                        <span style="color: #666; font-size: 12px;">📅 학년</span>
-                        <span style="color: #0E4A84; font-weight: bold; font-size: 13px;">{profile['grade']}학년 {profile['semester']}학기</span>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                        <span style="color: #666; font-size: 15px;">📅 학년</span>
+                        <span style="color: #0E4A84; font-weight: bold; font-size: 16px;">{profile['grade']}학년 {profile['semester']}학기</span>
                     </div>
                     <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <span style="color: #666; font-size: 12px;">📊 학점</span>
-                        <span style="color: #0E4A84; font-weight: bold; font-size: 13px;">{profile['gpa']}/4.5</span>
+                        <span style="color: #666; font-size: 15px;">📊 학점</span>
+                        <span style="color: #0E4A84; font-weight: bold; font-size: 16px;">{profile['gpa']}/4.5</span>
                     </div>
                 </div>
-                <div style="background: rgba(255,255,255,0.15); border-radius: 8px; padding: 10px;">
-                    <p style="color: rgba(255,255,255,0.7); font-size: 11px; margin: 0 0 4px 0;">🎯 관심 직무</p>
-                    <p style="color: white; font-weight: bold; margin: 0; font-size: 13px;">{profile['interest_career']}</p>
+                <div style="background: rgba(255,255,255,0.15); border-radius: 10px; padding: 14px;">
+                    <p style="color: rgba(255,255,255,0.8); font-size: 14px; margin: 0 0 6px 0;">🎯 관심 직무</p>
+                    <p style="color: white; font-weight: bold; margin: 0; font-size: 17px;">{profile['interest_career']}</p>
                 </div>
             </div>
         </div>
