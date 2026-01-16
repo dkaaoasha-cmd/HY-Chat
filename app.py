@@ -3,6 +3,7 @@ import plotly.graph_objects as go
 import plotly.express as px
 import random
 import time
+import calendar
 from datetime import datetime, timedelta
 
 st.set_page_config(
@@ -971,62 +972,167 @@ def render_career_roadmap():
             "해커톤": "#dc3545"
         }
         
-        fig_calendar = go.Figure()
+        type_icons = {
+            "공모전": "🏆",
+            "인턴십": "💼",
+            "대외활동": "🌟",
+            "서포터즈": "📣",
+            "해커톤": "💻"
+        }
         
-        for i, activity in enumerate(filtered_activities):
+        if "calendar_year" not in st.session_state:
+            st.session_state.calendar_year = today.year
+        if "calendar_month" not in st.session_state:
+            st.session_state.calendar_month = today.month
+        
+        nav_col1, nav_col2, nav_col3 = st.columns([1, 2, 1])
+        with nav_col1:
+            if st.button("◀ 이전 달"):
+                if st.session_state.calendar_month == 1:
+                    st.session_state.calendar_month = 12
+                    st.session_state.calendar_year -= 1
+                else:
+                    st.session_state.calendar_month -= 1
+                st.rerun()
+        with nav_col2:
+            st.markdown(f"<h4 style='text-align: center;'>{st.session_state.calendar_year}년 {st.session_state.calendar_month}월</h4>", unsafe_allow_html=True)
+        with nav_col3:
+            if st.button("다음 달 ▶"):
+                if st.session_state.calendar_month == 12:
+                    st.session_state.calendar_month = 1
+                    st.session_state.calendar_year += 1
+                else:
+                    st.session_state.calendar_month += 1
+                st.rerun()
+        
+        if st.button("📍 오늘로 이동"):
+            st.session_state.calendar_year = today.year
+            st.session_state.calendar_month = today.month
+            st.rerun()
+        
+        activities_by_date = {}
+        for activity in filtered_activities:
             start = datetime.strptime(activity["start_date"], "%Y-%m-%d")
             end = datetime.strptime(activity["end_date"], "%Y-%m-%d")
-            
-            days_until_deadline = (end - today).days
-            if days_until_deadline < 0:
-                status = "마감"
-            elif days_until_deadline <= 7:
-                status = f"D-{days_until_deadline} 🔥"
-            else:
-                status = f"D-{days_until_deadline}"
-            
-            fig_calendar.add_trace(go.Scatter(
-                x=[start, end],
-                y=[i, i],
-                mode='lines+markers',
-                line=dict(color=type_colors.get(activity["type"], "#666"), width=15),
-                marker=dict(size=10),
-                name=activity["name"],
-                hovertemplate=f"<b>{activity['name']}</b><br>" +
-                              f"유형: {activity['type']}<br>" +
-                              f"기간: {activity['start_date']} ~ {activity['end_date']}<br>" +
-                              f"상태: {status}<br>" +
-                              f"주최: {activity['host']}<extra></extra>"
-            ))
+            current = start
+            while current <= end:
+                date_key = current.strftime("%Y-%m-%d")
+                if date_key not in activities_by_date:
+                    activities_by_date[date_key] = []
+                activities_by_date[date_key].append(activity)
+                current += timedelta(days=1)
         
-        fig_calendar.update_layout(
-            title="활동 일정 타임라인",
-            xaxis_title="날짜",
-            yaxis=dict(
-                tickmode='array',
-                tickvals=list(range(len(filtered_activities))),
-                ticktext=[a["name"][:15] + "..." if len(a["name"]) > 15 else a["name"] for a in filtered_activities]
-            ),
-            height=max(300, len(filtered_activities) * 40),
-            showlegend=False,
-            margin=dict(l=150, r=20, t=50, b=50)
-        )
+        st.markdown("""
+        <style>
+        .calendar-header {
+            background-color: #0E4A84;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            font-weight: bold;
+            border-radius: 5px;
+            margin: 2px;
+        }
+        .calendar-day {
+            min-height: 100px;
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+            padding: 5px;
+            margin: 2px;
+            background-color: #fafafa;
+        }
+        .calendar-day-today {
+            min-height: 100px;
+            border: 2px solid #0E4A84;
+            border-radius: 5px;
+            padding: 5px;
+            margin: 2px;
+            background-color: #e3f2fd;
+        }
+        .calendar-day-number {
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        .calendar-day-number-today {
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 5px;
+            color: #0E4A84;
+        }
+        .calendar-event {
+            font-size: 11px;
+            padding: 2px 4px;
+            margin: 1px 0;
+            border-radius: 3px;
+            color: white;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .calendar-day-empty {
+            min-height: 100px;
+            border: 1px solid #f0f0f0;
+            border-radius: 5px;
+            padding: 5px;
+            margin: 2px;
+            background-color: #f5f5f5;
+        }
+        </style>
+        """, unsafe_allow_html=True)
         
-        if filtered_activities:
-            fig_calendar.add_shape(
-                type="line",
-                x0=today, x1=today,
-                y0=-0.5, y1=len(filtered_activities) - 0.5,
-                line=dict(color="red", width=2, dash="dash")
-            )
-            fig_calendar.add_annotation(
-                x=today, y=len(filtered_activities) - 0.5,
-                text="오늘", showarrow=False,
-                font=dict(color="red", size=12),
-                yshift=15
-            )
+        weekdays = ["월", "화", "수", "목", "금", "토", "일"]
+        header_cols = st.columns(7)
+        for i, day in enumerate(weekdays):
+            with header_cols[i]:
+                color = "#dc3545" if i == 6 else ("#0066cc" if i == 5 else "#0E4A84")
+                st.markdown(f"<div class='calendar-header' style='background-color: {color};'>{day}</div>", unsafe_allow_html=True)
         
-        st.plotly_chart(fig_calendar, width="stretch")
+        cal = calendar.Calendar(firstweekday=0)
+        month_days = cal.monthdayscalendar(st.session_state.calendar_year, st.session_state.calendar_month)
+        
+        for week in month_days:
+            week_cols = st.columns(7)
+            for i, day in enumerate(week):
+                with week_cols[i]:
+                    if day == 0:
+                        st.markdown("<div class='calendar-day-empty'></div>", unsafe_allow_html=True)
+                    else:
+                        date_str = f"{st.session_state.calendar_year}-{st.session_state.calendar_month:02d}-{day:02d}"
+                        is_today = (day == today.day and 
+                                   st.session_state.calendar_month == today.month and 
+                                   st.session_state.calendar_year == today.year)
+                        
+                        day_class = "calendar-day-today" if is_today else "calendar-day"
+                        number_class = "calendar-day-number-today" if is_today else "calendar-day-number"
+                        
+                        day_activities = activities_by_date.get(date_str, [])
+                        
+                        events_html = ""
+                        for act in day_activities[:3]:
+                            color = type_colors.get(act["type"], "#666")
+                            icon = type_icons.get(act["type"], "📌")
+                            name_short = act["name"][:8] + "..." if len(act["name"]) > 8 else act["name"]
+                            events_html += f"<div class='calendar-event' style='background-color: {color};'>{icon} {name_short}</div>"
+                        
+                        if len(day_activities) > 3:
+                            events_html += f"<div style='font-size: 10px; color: #666;'>+{len(day_activities) - 3}개 더</div>"
+                        
+                        today_badge = " 🔴" if is_today else ""
+                        st.markdown(f"""
+                        <div class='{day_class}'>
+                            <div class='{number_class}'>{day}{today_badge}</div>
+                            {events_html}
+                        </div>
+                        """, unsafe_allow_html=True)
+        
+        st.markdown("---")
+        st.markdown("##### 🎨 범례")
+        legend_cols = st.columns(5)
+        for idx, (type_name, color) in enumerate(type_colors.items()):
+            with legend_cols[idx]:
+                icon = type_icons.get(type_name, "📌")
+                st.markdown(f"<span style='background-color: {color}; color: white; padding: 3px 8px; border-radius: 3px;'>{icon} {type_name}</span>", unsafe_allow_html=True)
         
         st.markdown("##### 📋 활동 상세 목록")
         
