@@ -141,7 +141,7 @@ def generate_dummy_data():
             "requirements": {"min_gpa": 4.0, "max_income": 10},
             "deadline": (datetime.now() + timedelta(days=30)).strftime("%Y-%m-%d"),
             "description": "직전 학기 성적 우수자에게 지급되는 장학금입니다.",
-            "link": "https://www.hanyang.ac.kr/web/www/scholarship",
+            "link": "https://sc.hanyang.ac.kr/home",
             "eligibility": ["직전 학기 평점 4.0 이상", "재학생 (휴학생 제외)", "성적 장학금 중복 수혜 불가", "학기당 15학점 이상 이수자"]
         },
         {
@@ -151,7 +151,7 @@ def generate_dummy_data():
             "requirements": {"min_gpa": 2.5, "max_income": 4},
             "deadline": (datetime.now() + timedelta(days=45)).strftime("%Y-%m-%d"),
             "description": "저소득층 학생을 위한 교내 장학금입니다.",
-            "link": "https://www.hanyang.ac.kr/web/www/scholarship",
+            "link": "https://sc.hanyang.ac.kr/home",
             "eligibility": ["소득분위 4분위 이하", "직전 학기 평점 2.5 이상", "재학생 (신입생 제외)", "국가장학금 신청 완료자"]
         },
         {
@@ -181,7 +181,7 @@ def generate_dummy_data():
             "requirements": {"min_gpa": 3.0, "max_income": 10},
             "deadline": (datetime.now() + timedelta(days=35)).strftime("%Y-%m-%d"),
             "description": "TOEIC 900점 이상 또는 동등 수준의 외국어 능력 보유자",
-            "link": "https://www.hanyang.ac.kr/web/www/scholarship",
+            "link": "https://sc.hanyang.ac.kr/home",
             "eligibility": ["TOEIC 900점 이상 또는 TOEFL iBT 100점 이상", "직전 학기 평점 3.0 이상", "어학성적 유효기간 내 제출", "재학생 (휴학생 제외)"]
         }
     ]
